@@ -7,12 +7,13 @@ import {
   useEdgesState,
   MarkerType,
 } from '@xyflow/react';
+import type { Connection } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 
-import FloatingEdge from './FloatingEdge';
-import FloatingConnectionLine from './FloatingConnectionLine';
-import { initialElements } from './initialElements';
+import FloatingEdge from './FloatingEdge.tsx';
+import FloatingConnectionLine from './FloatingConnectionLine.tsx';
+import { initialElements } from './initialElements.ts';
 
 const { nodes: initialNodes, edges: initialEdges } = initialElements();
 
@@ -24,13 +25,12 @@ const NodeAsHandleFlow = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect = useCallback(
-    (params) =>
+    (params: Connection) =>
       setEdges((eds) =>
         addEdge(
           {
             ...params,
-            type: 'floating',
-            markerEnd: { type: MarkerType.Arrow },
+            type: 'floating'
           },
           eds,
         ),
