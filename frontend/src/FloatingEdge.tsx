@@ -1,19 +1,29 @@
 import { getBezierPath, useInternalNode } from '@xyflow/react';
-import type { EdgeProps } from '@xyflow/react';
+import type { CSSProperties } from 'react';
 
 import { getEdgeParams } from './initialElements';
 
-function FloatingEdge({ id, source, target, markerEnd, style }: EdgeProps) {
+interface FloatingEdgeProps {
+  id: string;
+  source: string;
+  target: string;
+  markerEnd?: string;
+  style?: CSSProperties;
+}
+
+function FloatingEdge({ id, source, target, markerEnd, style }: FloatingEdgeProps) {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
 
-  if (!sourceNode || !targetNode) {
+  if (!sourceNode || !targetNode || 
+      !sourceNode.measured?.width || !sourceNode.measured?.height ||
+      !targetNode.measured?.width || !targetNode.measured?.height) {
     return null;
   }
 
   const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
-    sourceNode,
-    targetNode,
+    sourceNode as any,
+    targetNode as any,
   );
 
   const [edgePath] = getBezierPath({

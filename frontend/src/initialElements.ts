@@ -1,8 +1,30 @@
 import { Position } from "@xyflow/react";
 
+interface NodeIntersection {
+  x: number;
+  y: number;
+}
+
+interface InternalNode {
+  id: string;
+  measured: {
+    width: number;
+    height: number;
+  };
+  internals: {
+    positionAbsolute: {
+      x: number;
+      y: number;
+    };
+  };
+}
+
 // this helper function returns the intersection point
 // of the line between the center of the intersectionNode and the target node
-function getNodeIntersection(intersectionNode: any, targetNode: any) {
+function getNodeIntersection(
+  intersectionNode: InternalNode,
+  targetNode: InternalNode
+): NodeIntersection {
   // https://math.stackexchange.com/questions/1724792/an-algorithm-for-finding-the-intersection-point-between-a-center-of-vision-and-a
   const { width: intersectionNodeWidth, height: intersectionNodeHeight } =
     intersectionNode.measured;
@@ -29,7 +51,10 @@ function getNodeIntersection(intersectionNode: any, targetNode: any) {
 }
 
 // returns the position (top,right,bottom or right) passed node compared to the intersection point
-function getEdgePosition(node: any, intersectionPoint: any) {
+function getEdgePosition(
+  node: InternalNode,
+  intersectionPoint: NodeIntersection
+): Position {
   const n = { ...node.internals.positionAbsolute, ...node };
   const nx = Math.round(n.x);
   const ny = Math.round(n.y);
@@ -52,8 +77,20 @@ function getEdgePosition(node: any, intersectionPoint: any) {
   return Position.Top;
 }
 
+interface EdgeParams {
+  sx: number;
+  sy: number;
+  tx: number;
+  ty: number;
+  sourcePos: Position;
+  targetPos: Position;
+}
+
 // returns the parameters (sx, sy, tx, ty, sourcePos, targetPos) you need to create an edge
-export function getEdgeParams(source: any, target: any) {
+export function getEdgeParams(
+  source: InternalNode,
+  target: InternalNode
+): EdgeParams {
   const sourceIntersectionPoint = getNodeIntersection(source, target);
   const targetIntersectionPoint = getNodeIntersection(target, source);
 
@@ -73,23 +110,27 @@ export function getEdgeParams(source: any, target: any) {
 export function initialElements() {
   const nodes = [];
   const edges = [];
-  const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
-  nodes.push({ id: "target", data: { label: "Target" }, position: center });
+  // Crear nodo central
+  nodes.push({
+    id: "target",
+    data: { label: "Target" },
+    position: { x: 0, y: 0 }, // Posición temporal, d3-force la ajustará
+  });
 
+  // Crear nodos periféricos
   for (let i = 0; i < 8; i++) {
-    const degrees = i * (360 / 8);
-    const radians = degrees * (Math.PI / 180);
-    const x = 250 * Math.cos(radians) + center.x;
-    const y = 250 * Math.sin(radians) + center.y;
-
-    nodes.push({ id: `${i}`, data: { label: "Source" }, position: { x, y } });
+    nodes.push({
+      id: `${i}`,
+      data: { label: `Source ${i + 1}` },
+      position: { x: 0, y: 0 }, // Posición temporal, d3-force la ajustará
+    });
 
     edges.push({
       id: `edge-${i}`,
       target: "target",
       source: `${i}`,
-      type: "floating"
+      type: "floating",
     });
   }
 
