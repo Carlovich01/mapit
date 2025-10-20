@@ -5,7 +5,6 @@ import {
   Background,
   useNodesState,
   useEdgesState,
-  MarkerType,
 } from '@xyflow/react';
 import type { Connection } from '@xyflow/react';
 
