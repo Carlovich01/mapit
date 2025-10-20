@@ -1,0 +1,1 @@
+"""MapIT Backend Application"""

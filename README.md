@@ -1,73 +1,265 @@
-# React + TypeScript + Vite
+# MapIT
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**MapIT** es una aplicación web educativa que transforma documentos PDF en herramientas de aprendizaje interactivas mediante Inteligencia Artificial.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. 📊 Mapas Mentales IA
+- Sube un PDF y obtén automáticamente un mapa mental interactivo
+- Visualización dinámica con React Flow y d3-force
+- Nodos y conexiones organizados jerárquicamente
 
-## React Compiler
+### 2. 🎴 Flashcards con Repetición Espaciada
+- Generación automática de flashcards desde el PDF
+- Implementación del algoritmo SM-2 para optimizar el aprendizaje
+- Sistema de revisión inteligente
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+### 3. 🎮 Juego de Reordenamiento
+- Modo de juego interactivo
+- Reorganiza y conecta nodos del mapa mental
+- Sistema de puntuación basado en precisión
 
-## Expanding the ESLint configuration
+## Stack Tecnológico
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend
+- **Framework:** FastAPI 0.115+ (Python 3.12+)
+- **Base de Datos:** PostgreSQL 16+ con SQLAlchemy 2.0 (asyncio)
+- **IA:** Google Gemini 2.5 Flash
+- **Procesamiento PDF:** PyMuPDF (en memoria)
+- **Autenticación:** JWT (python-jose)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Frontend
+- **Framework:** React 19.1.1 + TypeScript
+- **Build Tool:** Vite 7
+- **Compilador:** SWC
+- **UI:** shadcn/ui + Tailwind CSS
+- **Routing:** React Router DOM 7
+- **State:** Zustand
+- **HTTP:** Axios
+- **Visualización:** React Flow + D3-force
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### DevOps
+- **Contenedores:** Docker + Docker Compose
+- **Despliegue:** Render (configurado)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Estructura del Proyecto
+
+```
+mapit/
+├── backend/
+│   ├── app/
+│   │   ├── api/          # Endpoints (auth, mind_maps, flashcards, game)
+│   │   ├── models/       # Modelos SQLAlchemy
+│   │   ├── schemas/      # Esquemas Pydantic
+│   │   ├── services/     # Lógica de negocio
+│   │   ├── utils/        # Utilidades (JWT, validación)
+│   │   ├── config.py     # Configuración
+│   │   ├── database.py   # Configuración DB
+│   │   └── main.py       # Aplicación FastAPI
+│   ├── alembic/          # Migraciones
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/   # Componentes React
+│   │   ├── pages/        # Páginas de la aplicación
+│   │   ├── services/     # Servicios API
+│   │   ├── hooks/        # Hooks personalizados
+│   │   ├── types/        # Tipos TypeScript
+│   │   ├── utils/        # Utilidades
+│   │   ├── lib/          # shadcn utils
+│   │   └── App.tsx       # Router principal
+│   ├── package.json
+│   └── Dockerfile
+│
+└── docker-compose.yml
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Inicio Rápido
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisitos
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Docker y Docker Compose
+- API Key de Google Gemini
+
+### Configuración
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone <repository-url>
+   cd mapit
+   ```
+
+2. **Configurar variables de entorno**
+   
+   Crear archivo `.env` en la raíz:
+   ```env
+   GEMINI_API_KEY=tu-api-key-de-gemini
+   ```
+
+3. **Iniciar con Docker Compose**
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Acceder a la aplicación**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
+
+### Desarrollo Local (sin Docker)
+
+#### Backend
+
+```bash
+cd backend
+
+# Crear entorno virtual
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales
+
+# Ejecutar migraciones
+alembic upgrade head
+
+# Iniciar servidor
+uvicorn app.main:app --reload
 ```
+
+#### Frontend
+
+```bash
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+echo "VITE_API_URL=http://localhost:8000/api" > .env
+
+# Iniciar servidor de desarrollo
+npm run dev
+```
+
+## Base de Datos
+
+### Esquema Principal
+
+- **users:** Usuarios de la aplicación
+- **mind_maps:** Mapas mentales generados
+- **mind_map_nodes:** Nodos del mapa
+- **mind_map_edges:** Conexiones entre nodos
+- **flashcards:** Tarjetas de estudio
+- **flashcard_progress:** Progreso SM-2 del usuario
+- **game_sessions:** Sesiones de juego
+
+### Migraciones
+
+```bash
+# Crear nueva migración
+cd backend
+alembic revision --autogenerate -m "descripción"
+
+# Aplicar migraciones
+alembic upgrade head
+
+# Revertir migración
+alembic downgrade -1
+```
+
+## API Endpoints
+
+### Autenticación
+- `POST /api/auth/register` - Registro de usuario
+- `POST /api/auth/login` - Inicio de sesión (OAuth2)
+- `GET /api/auth/me` - Obtener usuario actual
+
+### Mapas Mentales
+- `POST /api/mind-maps` - Subir PDF y crear mapa
+- `GET /api/mind-maps` - Listar mapas del usuario
+- `GET /api/mind-maps/{id}` - Obtener mapa específico
+
+### Flashcards
+- `GET /api/flashcards/mind-maps/{id}/flashcards` - Obtener flashcards
+- `POST /api/flashcards/{id}/review` - Revisar flashcard
+- `GET /api/flashcards/due` - Flashcards pendientes
+
+### Juego
+- `POST /api/game/sessions` - Crear sesión de juego
+- `PUT /api/game/sessions/{id}` - Completar sesión
+- `GET /api/game/sessions` - Listar sesiones
+
+## Despliegue en Render
+
+### Backend
+
+1. Crear nuevo Web Service
+2. Conectar repositorio
+3. Configurar:
+   - Build Command: `pip install -r requirements.txt && alembic upgrade head`
+   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+4. Variables de entorno:
+   - `DATABASE_URL`
+   - `SECRET_KEY`
+   - `GEMINI_API_KEY`
+   - `FRONTEND_URL`
+
+### Frontend
+
+1. Crear nuevo Static Site
+2. Configurar:
+   - Build Command: `npm install && npm run build`
+   - Publish Directory: `dist`
+3. Variable de entorno:
+   - `VITE_API_URL`: URL del backend
+
+### Base de Datos
+
+1. Crear PostgreSQL Database en Render
+2. Copiar la URL de conexión interna
+3. Agregar a variables de entorno del backend
+
+## Algoritmos
+
+### SM-2 (Repetición Espaciada)
+
+El sistema implementa el algoritmo SuperMemo 2 para optimizar la revisión de flashcards:
+
+- **Calidad (0-5):** Nivel de recordación
+- **Factor de Facilidad (EF):** Dificultad de la tarjeta
+- **Intervalo:** Días hasta próxima revisión
+- **Repeticiones:** Veces revisada correctamente
+
+### Validación de Grafo
+
+Para el juego de reordenamiento:
+- Comparación de estructura de aristas
+- Normalización para grafo no dirigido
+- Puntuación basada en precisión (0-100%)
+
+## Contribución
+
+1. Fork el proyecto
+2. Crea una rama (`git checkout -b feature/AmazingFeature`)
+3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT.
+
+## Soporte
+
+Para problemas o preguntas, abre un issue en el repositorio.
+
+---
+
+Desarrollado con ❤️ usando React, FastAPI y Gemini AI
