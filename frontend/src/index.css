@@ -74,3 +74,8 @@
   opacity: 0;
 }
 
+/* Mostrar handles solo en modo juego */
+.floating-edges.game-mode .react-flow__handle {
+  opacity: 1;
+}
+

@@ -70,6 +70,9 @@ function MindMapViewerInner({
 
   // Configure d3-hierarchy tree layout radial
   useEffect(() => {
+    // Skip layout in game mode - we want random positions
+    if (isGameMode) return;
+    
     if (!nodes.length || !edges.length) return;
 
     // Build hierarchical structure from nodes and edges
@@ -178,7 +181,7 @@ function MindMapViewerInner({
   );
 
   return (
-    <div className="floating-edges w-full" style={{ height: '600px' }}>
+    <div className={`floating-edges w-full ${isGameMode ? 'game-mode' : ''}`} style={{ height: '600px' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -187,7 +190,7 @@ function MindMapViewerInner({
         onConnect={onConnect}
         edgeTypes={edgeTypes}
         connectionLineComponent={FloatingConnectionLine}
-        nodesDraggable={false}
+        nodesDraggable={isGameMode}
         nodesConnectable={!readOnly || isGameMode}
         elementsSelectable={!readOnly || isGameMode}
         minZoom={0.1}

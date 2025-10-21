@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { type Edge } from '@xyflow/react';
 import type { MindMap } from '../../types/mindmap';
 import { MindMapViewer } from '../mindmap/MindMapViewer';
@@ -16,17 +16,35 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   const [startTime] = useState(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  // Prepare nodes for game mode (positions will be set by radial layout)
-  const shuffledNodes = mindMap.nodes.map((node) => ({
-    ...node,
-    data: { 
-      label: node.label,
-      level: node.level,
-      content: node.content,
-    },
-    position: node.position || { x: 0, y: 0 },
-    style: getNodeStyleForLevel(node.level),
-  }));
+  // Generate random positions once for nodes in game mode
+  const shuffledNodes = useMemo(() => {
+    const generateRandomPosition = () => {
+      // Distribute nodes randomly in a large area
+      const centerX = 600;
+      const centerY = 400;
+      const spreadRadius = 400;
+      
+      // Use a random angle and radius for each node
+      const angle = (Math.random() * 2 * Math.PI);
+      const radius = Math.random() * spreadRadius;
+      
+      return {
+        x: centerX + radius * Math.cos(angle),
+        y: centerY + radius * Math.sin(angle),
+      };
+    };
+
+    return mindMap.nodes.map((node) => ({
+      ...node,
+      data: { 
+        label: node.label,
+        level: node.level,
+        content: node.content,
+      },
+      position: generateRandomPosition(),
+      style: getNodeStyleForLevel(node.level),
+    }));
+  }, [mindMap.nodes]);
 
   // Update elapsed time
   useEffect(() => {
