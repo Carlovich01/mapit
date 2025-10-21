@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 interface FlashcardItemProps {
   flashcard: Flashcard;
-  onReview: (quality: number) => void;
+  onReview: (quality: number) => Promise<void>;
   disabled?: boolean;
 }
 
@@ -21,9 +21,8 @@ export function FlashcardItem({ flashcard, onReview, disabled }: FlashcardItemPr
     { value: 0, label: 'No recuerdo', color: 'bg-gray-500' },
   ];
 
-  const handleReview = (quality: number) => {
-    onReview(quality);
-    setShowAnswer(false);
+  const handleReview = async (quality: number) => {
+    await onReview(quality);
   };
 
   return (

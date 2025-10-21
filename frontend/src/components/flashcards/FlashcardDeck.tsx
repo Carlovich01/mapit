@@ -12,12 +12,31 @@ interface FlashcardDeckProps {
 export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [reviewing, setReviewing] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   if (flashcards.length === 0) {
     return (
       <Card>
         <CardContent className="p-8 text-center text-muted-foreground">
           No hay flashcards disponibles para revisar.
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Mostrar pantalla de completado
+  if (completed) {
+    return (
+      <Card>
+        <CardContent className="p-8 text-center space-y-4">
+          <div className="text-4xl">🎉</div>
+          <h3 className="text-2xl font-bold">¡Excelente trabajo!</h3>
+          <p className="text-muted-foreground">
+            Has completado todas las flashcards de esta sesión.
+          </p>
+          <Button onClick={() => { setCompleted(false); setCurrentIndex(0); }}>
+            Revisar de nuevo
+          </Button>
         </CardContent>
       </Card>
     );
@@ -31,11 +50,11 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
     try {
       await onReview(currentCard.id, quality);
       
-      // Move to next card
+      // Move to next card or complete
       if (currentIndex < flashcards.length - 1) {
         setCurrentIndex(currentIndex + 1);
       } else {
-        setCurrentIndex(0);
+        setCompleted(true);
       }
     } catch (error) {
       console.error('Error reviewing flashcard:', error);
@@ -47,7 +66,7 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Progreso: {progress}</h3>
+        <h3 className="text-lg font-semibold">Flashcard: {progress}</h3>
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -69,6 +88,7 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
       </div>
 
       <FlashcardItem
+        key={currentCard.id}
         flashcard={currentCard}
         onReview={handleReview}
         disabled={reviewing}

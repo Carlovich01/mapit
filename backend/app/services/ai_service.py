@@ -124,9 +124,7 @@ Responde SOLO con el JSON (sin markdown, sin explicaciones):"""
             print(
                 f"Response text (if available): {response_text if 'response_text' in locals() else 'N/A'}"
             )
-            raise ValueError(
-                "Error inesperado al procesar el PDF con IA. "
-            )
+            raise ValueError("Error inesperado al procesar el PDF con IA. ")
 
     async def generate_flashcards(self, text: str, num_cards: int = 10) -> list[dict]:
         """

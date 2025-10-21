@@ -157,7 +157,8 @@ class FlashcardService:
     async def get_due_flashcards(
         self, db: AsyncSession, user_id: UUID, mind_map_id: UUID | None = None
     ) -> list[FlashcardProgress]:
-        """Get flashcards due for review."""
+        """Get flashcards due for review, including never-reviewed flashcards."""
+        # Get flashcards that are due for review
         query = (
             select(FlashcardProgress)
             .where(
@@ -171,4 +172,80 @@ class FlashcardService:
             query = query.join(Flashcard).where(Flashcard.mind_map_id == mind_map_id)
 
         result = await db.execute(query)
-        return list(result.scalars().all())
+        due_flashcards = list(result.scalars().all())
+
+        # Get all flashcards for the mind map(s)
+        flashcard_query = select(Flashcard)
+        if mind_map_id:
+            flashcard_query = flashcard_query.where(
+                Flashcard.mind_map_id == mind_map_id
+            )
+        else:
+            # Get all flashcards for user's mind maps
+            flashcard_query = flashcard_query.join(MindMap).where(
+                MindMap.user_id == user_id
+            )
+
+        flashcard_result = await db.execute(flashcard_query)
+        all_flashcards = list(flashcard_result.scalars().all())
+
+        # Get ALL existing progress for these flashcards (not just due ones)
+        # to avoid duplicate creation
+        all_progress_query = select(FlashcardProgress).where(
+            FlashcardProgress.user_id == user_id
+        )
+        if mind_map_id:
+            all_progress_query = all_progress_query.join(Flashcard).where(
+                Flashcard.mind_map_id == mind_map_id
+            )
+        else:
+            all_progress_query = (
+                all_progress_query.join(Flashcard)
+                .join(MindMap)
+                .where(MindMap.user_id == user_id)
+            )
+
+        all_progress_result = await db.execute(all_progress_query)
+        all_existing_progress = list(all_progress_result.scalars().all())
+
+        # Get flashcard IDs that already have ANY progress (due or not)
+        reviewed_flashcard_ids = {
+            progress.flashcard_id for progress in all_existing_progress
+        }
+
+        # Create and save progress entries for never-reviewed flashcards
+        new_progress_list = []
+        for flashcard in all_flashcards:
+            if flashcard.id not in reviewed_flashcard_ids:
+                # Create initial progress for this flashcard
+                progress = FlashcardProgress(
+                    user_id=user_id,
+                    flashcard_id=flashcard.id,
+                    easiness_factor=2.5,
+                    interval=0,
+                    repetitions=0,
+                    next_review_date=date.today(),
+                )
+                db.add(progress)
+                new_progress_list.append(progress)
+
+        # Commit all new progress records at once
+        if new_progress_list:
+            await db.commit()
+
+            # Reload with flashcard relationships
+            for progress in new_progress_list:
+                await db.refresh(progress)
+
+            # Load flashcard relationship
+            new_progress_ids = [p.id for p in new_progress_list]
+            reload_query = (
+                select(FlashcardProgress)
+                .where(FlashcardProgress.id.in_(new_progress_ids))
+                .options(selectinload(FlashcardProgress.flashcard))
+            )
+            reload_result = await db.execute(reload_query)
+            reloaded_progress = list(reload_result.scalars().all())
+            due_flashcards.extend(reloaded_progress)
+
+        return due_flashcards
