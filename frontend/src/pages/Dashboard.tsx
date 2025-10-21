@@ -33,24 +33,13 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Gestiona tus mapas mentales y herramientas de aprendizaje
-        </p>
-      </div>
-
       <Card>
         <CardHeader>
           <CardTitle>Subir Nuevo PDF</CardTitle>
-          <CardDescription>
-            Sube un documento PDF para generar un mapa mental automáticamente
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="pdf-upload">Seleccionar PDF</Label>
               <Input
                 id="pdf-upload"
                 type="file"
@@ -87,18 +76,18 @@ export function Dashboard() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {mindMaps.map((mindMap) => (
-            <Card key={mindMap.id} className="hover:shadow-lg transition-shadow">
+            <Card key={mindMap.id} className="hover:shadow-lg transition-shadow flex flex-col h-full">
               <CardHeader>
                 <CardTitle className="text-lg">{mindMap.title}</CardTitle>
                 <CardDescription>
                   {mindMap.pdf_filename}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-grow flex flex-col justify-between">
                 <p className="text-xs text-muted-foreground mb-4">
                   Creado: {format(new Date(mindMap.created_at), 'PPP')}
                 </p>
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-auto">
                   <Link to={`/mind-maps/${mindMap.id}`} className="flex-1">
                     <Button variant="outline" className="w-full" size="sm">
                       Ver Mapa
