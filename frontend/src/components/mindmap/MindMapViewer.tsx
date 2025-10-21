@@ -213,7 +213,7 @@ function MindMapViewerInner({
   );
 
   return (
-    <div className="floating-edges" style={{ width: '100%', height: '600px' }}>
+    <div className="floating-edges w-full" style={{ height: '600px' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

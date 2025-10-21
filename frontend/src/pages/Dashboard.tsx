@@ -32,7 +32,7 @@ export function Dashboard() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="container mx-auto px-4 space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Subir Nuevo PDF</CardTitle>

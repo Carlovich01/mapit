@@ -139,7 +139,7 @@ export function GamePage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="w-full space-y-4">
       <GameBoard mindMap={mindMap} onComplete={handleComplete} />
     </div>
   );

@@ -34,8 +34,8 @@ export function MindMapDetail() {
   }));
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="w-full max-w-full space-y-4">
+      <div className="flex items-center justify-between px-4">
         <div>
           <h1 className="text-3xl font-bold">{mindMap.title}</h1>
           {mindMap.pdf_filename && (
@@ -54,37 +54,39 @@ export function MindMapDetail() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="w-full">
+        <CardHeader className="px-4 md:px-6">
           <CardTitle>Mapa Mental Interactivo</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <MindMapViewer nodes={nodes} edges={edges} readOnly={true} />
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Nodos del Mapa</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {mindMap.nodes.map((node) => (
-              <div
-                key={node.id}
-                className="p-3 border rounded-lg hover:bg-accent transition-colors"
-              >
-                <h4 className="font-semibold">{node.label}</h4>
-                {node.content && (
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {node.content}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="px-4">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Nodos del Mapa</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {mindMap.nodes.map((node) => (
+                <div
+                  key={node.id}
+                  className="p-3 border rounded-lg hover:bg-accent transition-colors"
+                >
+                  <h4 className="font-semibold">{node.label}</h4>
+                  {node.content && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {node.content}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

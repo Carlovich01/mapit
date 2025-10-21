@@ -55,9 +55,9 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
+    <div className="w-full space-y-4">
+      <Card className="w-full">
+        <CardHeader className="px-4 md:px-6">
           <div className="flex items-center justify-between">
             <CardTitle>Juego de Reordenamiento</CardTitle>
             <div className="flex items-center gap-4">
@@ -70,8 +70,8 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="mb-4 p-3 bg-muted rounded-lg">
+        <CardContent className="px-0">
+          <div className="mb-4 mx-4 md:mx-6 p-3 bg-muted rounded-lg">
             <p className="text-sm">
               <strong>Instrucciones:</strong> Arrastra y conecta los nodos para recrear el mapa mental original.
               Conecta los nodos haciendo clic y arrastrando desde un nodo hacia otro.
@@ -85,7 +85,7 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
             onEdgesChange={handleEdgesChange}
           />
 
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 mx-4 md:mx-6 flex justify-end">
             <Button
               onClick={handleSubmit}
               size="lg"
