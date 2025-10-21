@@ -32,11 +32,15 @@ services:
       FRONTEND_URL: http://localhost:5173
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      PYTHONUNBUFFERED: 1
+      FORCE_COLOR: 1
     depends_on:
       db:
         condition: service_healthy
     networks:
       - mapit-network
+    tty: true
+    stdin_open: true
 
   frontend:
     build: ./frontend
@@ -48,10 +52,13 @@ services:
       - "5173:5173"
     environment:
       VITE_API_URL: http://localhost:8000/api
+      FORCE_COLOR: 1
     depends_on:
       - backend
     networks:
       - mapit-network
+    tty: true
+    stdin_open: true
 
   adminer:
     image: adminer:latest

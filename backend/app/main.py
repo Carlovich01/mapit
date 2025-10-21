@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.api import auth, mind_maps, flashcards, game
+from app.middleware import LoggingMiddleware
+from app.utils.logger import setup_logger, log_success
 
+# Setup logger
+logger = setup_logger("mapit")
 
 # Create FastAPI app
 app = FastAPI(
@@ -10,6 +14,9 @@ app = FastAPI(
     description="Transform PDFs into interactive learning tools with AI",
     version="1.0.0",
 )
+
+# Add logging middleware (first, so it logs everything)
+app.add_middleware(LoggingMiddleware)
 
 # Configure CORS
 app.add_middleware(
@@ -37,3 +44,10 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy"}
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Log startup message."""
+    log_success("MapIT API iniciada correctamente - Servidor corriendo")
+    logger.info(f"Documentación disponible en: http://localhost:8000/docs")

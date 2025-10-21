@@ -1,0 +1,71 @@
+═══════════════════════════════════════════════════════════════
+   🎨 CÓMO VER COLORES EN DOCKER COMPOSE - SOLUCIÓN RÁPIDA
+═══════════════════════════════════════════════════════════════
+
+✅ CAMBIOS YA APLICADOS:
+   - docker-compose.yml actualizado con tty: true
+   - Variables de entorno FORCE_COLOR=1 agregadas
+   - Logger del backend configurado para forzar colores
+
+═══════════════════════════════════════════════════════════════
+
+🚀 PASOS PARA VER COLORES:
+
+1. Detener contenedores actuales:
+   
+   docker-compose down
+
+2. Reconstruir (solo si ya tenías contenedores):
+   
+   docker-compose build --no-cache
+
+3. Iniciar SIN -d para ver logs:
+   
+   docker-compose up
+
+¡YA DEBERÍAS VER COLORES! 🎨
+
+═══════════════════════════════════════════════════════════════
+
+📊 EJEMPLO DE SALIDA ESPERADA:
+
+backend_1   | INFO:     ✓ MapIT API iniciada correctamente
+backend_1   | INFO:     ✓ GET /health  Status: 200  Duration: 5ms
+backend_1   | ERROR:    ✗ POST /api/...  Status: 500  Duration: 245ms
+
+═══════════════════════════════════════════════════════════════
+
+🔧 SI NO VES COLORES:
+
+Opción 1 - Verificar que se aplicaron los cambios:
+   docker-compose down
+   docker-compose build --no-cache
+   docker-compose up
+
+Opción 2 - Verificar variables de entorno:
+   docker-compose exec backend env | grep FORCE
+
+Opción 3 - Actualizar tu terminal:
+   Windows: Usa PowerShell 7+ o Windows Terminal
+   Mac/Linux: Usa terminal moderna (iTerm2, Gnome Terminal, etc)
+
+═══════════════════════════════════════════════════════════════
+
+💡 ALTERNATIVAS:
+
+Ver solo backend:
+   docker-compose up backend
+
+En background + seguir logs:
+   docker-compose up -d
+   docker-compose logs -f backend
+
+═══════════════════════════════════════════════════════════════
+
+📚 MÁS INFORMACIÓN:
+   - DOCKER_INSTRUCCIONES.md (completo)
+   - DOCKER_LOGGING.md (detalles técnicos)
+   - LOGGING.md (sistema completo de logging)
+
+═══════════════════════════════════════════════════════════════
+

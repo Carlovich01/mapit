@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Logging con Colores - MapIT</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .info-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #fbbf24;
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Prueba de Logging con Colores</h1>
+        
+        <div class="info-box">
+            <p><strong>📝 Instrucciones:</strong></p>
+            <p>Haz clic en los botones para ver diferentes tipos de logs en la consola del navegador.</p>
+            <p>Abre la <strong>Consola de Desarrollador</strong> (F12) para ver los logs con colores.</p>
+        </div>
+
+        <h2>Logs Básicos</h2>
+        <div class="button-group">
+            <button onclick="testSuccess()">✅ Success Log</button>
+            <button onclick="testError()">❌ Error Log</button>
+            <button onclick="testWarning()">⚠️ Warning Log</button>
+            <button onclick="testInfo()">ℹ️ Info Log</button>
+        </div>
+
+        <h2>Peticiones HTTP Simuladas</h2>
+        <div class="button-group">
+            <button onclick="testHttpSuccess()">🟢 HTTP 200</button>
+            <button onclick="testHttpNotFound()">🟡 HTTP 404</button>
+            <button onclick="testHttpError()">🔴 HTTP 500</button>
+            <button onclick="testAllRequests()">🌐 Todas las Peticiones</button>
+        </div>
+
+        <h2>Logger por Módulo</h2>
+        <div class="button-group">
+            <button onclick="testModuleLogger()">📦 Module Logger</button>
+        </div>
+
+        <div class="info-box">
+            <p><strong>💡 Tip:</strong> Los logs en la consola mostrarán diferentes colores según el tipo:</p>
+            <ul>
+                <li>🟢 Verde: Éxito (200-299)</li>
+                <li>🔵 Azul: Info / Redirección (300-399)</li>
+                <li>🟡 Amarillo: Advertencias / Errores del cliente (400-499)</li>
+                <li>🔴 Rojo: Errores del servidor (500+)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type="module">
+        // Simular el logger del frontend
+        const logger = {
+            success: (message, ...args) => {
+                console.log(`%c✓ ${message}`, 'color: #10b981; font-weight: bold; font-size: 12px;', ...args);
+            },
+            error: (message, ...args) => {
+                console.error(`%c✗ ${message}`, 'color: #ef4444; font-weight: bold; font-size: 12px;', ...args);
+            },
+            warning: (message, ...args) => {
+                console.warn(`%c⚠ ${message}`, 'color: #f59e0b; font-weight: bold; font-size: 12px;', ...args);
+            },
+            info: (message, ...args) => {
+                console.info(`%cℹ ${message}`, 'color: #3b82f6; font-weight: bold; font-size: 12px;', ...args);
+            },
+            request: (method, url, data) => {
+                const timestamp = new Date().toLocaleTimeString();
+                console.log(`%c→ [${timestamp}] ${method} ${url}`, 'color: #6366f1; font-weight: bold;', data || '');
+            },
+            response: (method, url, status, duration) => {
+                const timestamp = new Date().toLocaleTimeString();
+                let style, symbol;
+                
+                if (status >= 200 && status < 300) {
+                    style = 'color: #10b981; font-weight: bold; font-size: 12px;';
+                    symbol = '✓';
+                } else if (status >= 300 && status < 400) {
+                    style = 'color: #3b82f6; font-weight: bold; font-size: 12px;';
+                    symbol = 'ℹ';
+                } else if (status >= 400 && status < 500) {
+                    style = 'color: #f59e0b; font-weight: bold; font-size: 12px;';
+                    symbol = '⚠';
+                } else {
+                    style = 'color: #ef4444; font-weight: bold; font-size: 12px;';
+                    symbol = '✗';
+                }
+                
+                const durationText = duration ? ` (${duration.toFixed(0)}ms)` : '';
+                console.log(`%c${symbol} [${timestamp}] ${method} ${url} - Status: ${status}${durationText}`, style);
+            },
+            create: (moduleName) => ({
+                success: (message, ...args) => logger.success(`[${moduleName}] ${message}`, ...args),
+                error: (message, ...args) => logger.error(`[${moduleName}] ${message}`, ...args),
+                warning: (message, ...args) => logger.warning(`[${moduleName}] ${message}`, ...args),
+                info: (message, ...args) => logger.info(`[${moduleName}] ${message}`, ...args),
+            })
+        };
+
+        // Funciones de prueba
+        window.testSuccess = () => {
+            logger.success('Operación completada exitosamente');
+        };
+
+        window.testError = () => {
+            logger.error('Ha ocurrido un error al procesar la solicitud');
+        };
+
+        window.testWarning = () => {
+            logger.warning('Advertencia: El token expirará en 5 minutos');
+        };
+
+        window.testInfo = () => {
+            logger.info('Cargando datos del servidor...');
+        };
+
+        window.testHttpSuccess = () => {
+            logger.request('GET', '/api/mind-maps');
+            setTimeout(() => {
+                logger.response('GET', '/api/mind-maps', 200, 45.23);
+            }, 100);
+        };
+
+        window.testHttpNotFound = () => {
+            logger.request('GET', '/api/flashcards/999');
+            setTimeout(() => {
+                logger.response('GET', '/api/flashcards/999', 404, 12.34);
+            }, 100);
+        };
+
+        window.testHttpError = () => {
+            logger.request('POST', '/api/mind-maps');
+            setTimeout(() => {
+                logger.response('POST', '/api/mind-maps', 500, 234.56);
+            }, 100);
+        };
+
+        window.testAllRequests = () => {
+            const requests = [
+                { method: 'POST', url: '/api/auth/login', status: 200, duration: 123.45 },
+                { method: 'GET', url: '/api/mind-maps', status: 200, duration: 45.23 },
+                { method: 'GET', url: '/api/flashcards', status: 200, duration: 67.89 },
+                { method: 'POST', url: '/api/mind-maps', status: 201, duration: 234.56 },
+                { method: 'GET', url: '/api/flashcards/999', status: 404, duration: 12.34 },
+                { method: 'DELETE', url: '/api/mind-maps/999', status: 403, duration: 23.45 },
+                { method: 'POST', url: '/api/game/start', status: 500, duration: 345.67 },
+            ];
+
+            requests.forEach((req, index) => {
+                setTimeout(() => {
+                    logger.request(req.method, req.url);
+                    setTimeout(() => {
+                        logger.response(req.method, req.url, req.status, req.duration);
+                    }, 50);
+                }, index * 300);
+            });
+        };
+
+        window.testModuleLogger = () => {
+            const mindMapLogger = logger.create('MindMap');
+            const flashcardLogger = logger.create('Flashcard');
+            const gameLogger = logger.create('Game');
+
+            mindMapLogger.success('Mapa mental creado correctamente');
+            flashcardLogger.info('Cargando flashcards...');
+            gameLogger.warning('Quedan 3 intentos');
+            mindMapLogger.error('Error al guardar el mapa mental');
+        };
+
+        // Log inicial
+        console.log('%c🎨 Sistema de Logging con Colores - MapIT', 'color: #667eea; font-size: 16px; font-weight: bold;');
+        console.log('%cAbre la consola y haz clic en los botones para ver los diferentes tipos de logs', 'color: #94a3b8; font-size: 12px;');
+    </script>
+</body>
+</html>
+

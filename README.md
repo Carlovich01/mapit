@@ -19,6 +19,14 @@
 - Reorganiza y conecta nodos del mapa mental
 - Sistema de puntuación basado en precisión
 
+### 4. 🎨 Sistema de Logging con Colores
+- Logs coloridos en consola para backend (terminal) y frontend (navegador)
+- 🟢 Verde para peticiones exitosas (200-299)
+- 🔴 Rojo para errores (400+)
+- Tracking automático de todas las peticiones HTTP con duración
+- ✅ Funciona en desarrollo local y Docker Compose
+- Ver [LOGGING.md](LOGGING.md) o [DOCKER_INSTRUCCIONES.md](DOCKER_INSTRUCCIONES.md) para más detalles
+
 ## Stack Tecnológico
 
 ### Backend
