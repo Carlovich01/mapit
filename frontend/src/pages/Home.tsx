@@ -45,9 +45,9 @@ export function Home() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Flashcards SM-2</CardTitle>
+            <CardTitle>Quests Personalizados</CardTitle>
             <CardDescription>
-              Sistema de repetición espaciada para optimizar tu aprendizaje
+              Implementados a traves de flashcards y repetición espaciada para optimizar tu aprendizaje
             </CardDescription>
           </CardHeader>
           <CardContent>
