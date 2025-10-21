@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { type Edge } from '@xyflow/react';
 import type { MindMap } from '../../types/mindmap';
-import { MindMapViewer } from '../mindmap/MindMapViewer';
+import { MindMapGameViewer } from '../mindmap/MindMapGameViewer';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { getNodeStyleForLevel } from '../../utils/nodeStyles';
@@ -99,10 +99,9 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
             </p>
           </div>
 
-          <MindMapViewer
+          <MindMapGameViewer
             nodes={shuffledNodes}
             edges={gameEdges}
-            isGameMode={true}
             onEdgesChange={handleEdgesChange}
           />
 

@@ -1,14 +1,12 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import {
   ReactFlow,
   ReactFlowProvider,
-  addEdge,
   Background,
   Controls,
   MiniMap,
   useNodesState,
   useEdgesState,
-  type Connection,
   type Node,
   type Edge,
 } from "@xyflow/react";
@@ -21,23 +19,17 @@ const edgeTypes = {
   floating: FloatingEdge,
 };
 
-interface MindMapViewerProps {
+interface MindMapReadViewerProps {
   nodes: Node[];
   edges: Edge[];
-  isGameMode?: boolean;
-  onEdgesChange?: (edges: Edge[]) => void;
-  readOnly?: boolean;
 }
 
-function MindMapViewerInner({
+function MindMapReadViewerInner({
   nodes: initialNodes,
   edges: initialEdges,
-  isGameMode = false,
-  onEdgesChange,
-  readOnly = false,
-}: MindMapViewerProps) {
-  const [nodes, setNodes, onNodesChangeInternal] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChangeInternal] = useEdgesState(initialEdges);
+}: MindMapReadViewerProps) {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges] = useEdgesState(initialEdges);
 
   // Update nodes and edges when props change
   useEffect(() => {
@@ -48,31 +40,8 @@ function MindMapViewerInner({
     setEdges(initialEdges);
   }, [initialEdges, setEdges]);
 
-  const onConnect = useCallback(
-    (params: Connection) => {
-      if (readOnly && !isGameMode) return;
-      
-      const newEdges = addEdge(
-        {
-          ...params,
-          type: "floating",
-        },
-        edges
-      );
-      setEdges(newEdges);
-      
-      if (onEdgesChange) {
-        onEdgesChange(newEdges);
-      }
-    },
-    [edges, setEdges, readOnly, isGameMode, onEdgesChange]
-  );
-
   // Configure d3-hierarchy tree layout radial
   useEffect(() => {
-    // Skip layout in game mode - we want random positions
-    if (isGameMode) return;
-    
     if (!nodes.length || !edges.length) return;
 
     // Build hierarchical structure from nodes and edges
@@ -113,13 +82,12 @@ function MindMapViewerInner({
     });
 
     // Calculate required radius based on tree depth and node count
-    // d3.tree() optimiza el espacio mejor que cluster
     const maxNodesInLevel = Math.max(...Array.from(nodesPerLevel.values()));
-    const nodeWidth = 180; // Aumentado de 160
-    const minSpacing = 140; // Aumentado de 100
+    const nodeWidth = 180;
+    const minSpacing = 140;
     
     // Calcular radio basado en el nivel con más nodos con factor de seguridad
-    const safetyFactor = 1.6; // Factor de seguridad para distribucion no uniforme
+    const safetyFactor = 1.6;
     const requiredCircumference = maxNodesInLevel * (nodeWidth + minSpacing) * safetyFactor;
     const baseRadius = requiredCircumference / (2 * Math.PI);
     
@@ -127,15 +95,13 @@ function MindMapViewerInner({
     const radiusPerLevel = Math.max(250, baseRadius / Math.max(root.height, 1));
     const maxRadius = radiusPerLevel * root.height;
 
-    // Configure radial tree layout (mejor para mapas mentales)
+    // Configure radial tree layout
     const treeLayout = d3.tree<any>()
       .size([2 * Math.PI, maxRadius])
       .separation((a, b) => {
-        // Separación agresiva para evitar solapamiento
-        const baseSep = a.parent === b.parent ? 2 : 4; // Aumentado de 1:2 a 2:4
-        // Ajustar separación según profundidad
-        const depthFactor = 1 + (a.depth * 0.2); // Más espacio en niveles profundos
-        return (baseSep / Math.max(a.depth, 1)) * depthFactor * 1.8; // Multiplicador adicional
+        const baseSep = a.parent === b.parent ? 2 : 4;
+        const depthFactor = 1 + (a.depth * 0.2);
+        return (baseSep / Math.max(a.depth, 1)) * depthFactor * 1.8;
       });
 
     // Apply layout
@@ -166,33 +132,17 @@ function MindMapViewerInner({
     setNodes(updatedNodes);
   }, [initialNodes, initialEdges, setNodes]);
 
-  const handleEdgesChange = useCallback(
-    (changes: any) => {
-      onEdgesChangeInternal(changes);
-      if (onEdgesChange) {
-        // Get updated edges after changes
-        setEdges((eds) => {
-          onEdgesChange(eds);
-          return eds;
-        });
-      }
-    },
-    [onEdgesChangeInternal, onEdgesChange, setEdges]
-  );
-
   return (
-    <div className={`floating-edges w-full ${isGameMode ? 'game-mode' : ''}`} style={{ height: '600px' }}>
+    <div className="floating-edges w-full" style={{ height: '600px' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChangeInternal}
-        onEdgesChange={handleEdgesChange}
-        onConnect={onConnect}
+        onNodesChange={onNodesChange}
         edgeTypes={edgeTypes}
         connectionLineComponent={FloatingConnectionLine}
-        nodesDraggable={isGameMode}
-        nodesConnectable={!readOnly || isGameMode}
-        elementsSelectable={!readOnly || isGameMode}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={false}
         minZoom={0.1}
         maxZoom={4}
         fitView
@@ -212,10 +162,10 @@ function MindMapViewerInner({
   );
 }
 
-export function MindMapViewer(props: MindMapViewerProps) {
+export function MindMapReadViewer(props: MindMapReadViewerProps) {
   return (
     <ReactFlowProvider>
-      <MindMapViewerInner {...props} />
+      <MindMapReadViewerInner {...props} />
     </ReactFlowProvider>
   );
 }

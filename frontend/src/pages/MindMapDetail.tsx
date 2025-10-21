@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useMindMap } from '../hooks/useMindMap';
-import { MindMapViewer } from '../components/mindmap/MindMapViewer';
+import { MindMapReadViewer } from '../components/mindmap/MindMapReadViewer';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { getNodeStyleForLevel, getColorForLevel } from '../utils/nodeStyles';
@@ -81,7 +81,7 @@ export function MindMapDetail() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <MindMapViewer nodes={nodes} edges={edges} readOnly={true} />
+          <MindMapReadViewer nodes={nodes} edges={edges} />
         </CardContent>
       </Card>
 
