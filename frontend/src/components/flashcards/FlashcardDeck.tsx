@@ -43,7 +43,6 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
   }
 
   const currentCard = flashcards[currentIndex];
-  const progress = `${currentIndex + 1} / ${flashcards.length}`;
 
   const handleReview = async (quality: number) => {
     setReviewing(true);
@@ -64,36 +63,12 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Flashcard: {progress}</h3>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
-            disabled={currentIndex === 0 || reviewing}
-          >
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentIndex(Math.min(flashcards.length - 1, currentIndex + 1))}
-            disabled={currentIndex === flashcards.length - 1 || reviewing}
-          >
-            Siguiente
-          </Button>
-        </div>
-      </div>
-
-      <FlashcardItem
-        key={currentCard.id}
-        flashcard={currentCard}
-        onReview={handleReview}
-        disabled={reviewing}
-      />
-    </div>
+    <FlashcardItem
+      key={currentCard.id}
+      flashcard={currentCard}
+      onReview={handleReview}
+      disabled={reviewing}
+    />
   );
 }
 
