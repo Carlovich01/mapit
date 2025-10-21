@@ -91,28 +91,7 @@ export function MindMapDetail() {
 
       {/* Contenido del mapa que ocupa todo el espacio restante */}
       <div className="flex-1 relative overflow-hidden">
-        <div className="h-full flex flex-col">
-          <div className="px-4 py-2 border-b">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium">Niveles:</span>
-              {Array.from(new Set(mindMap.nodes.map(n => n.level))).sort((a, b) => a - b).map(level => {
-                const color = getColorForLevel(level);
-                return (
-                  <div 
-                    key={level}
-                    className="flex items-center gap-1 px-2 py-1 rounded"
-                    style={{ backgroundColor: color.bg, color: color.text }}
-                  >
-                    <span className="font-semibold">{level + 1}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="flex-1 relative">
-            <MindMapReadViewer nodes={nodes} edges={edges} onNodeClick={handleNodeClick} />
-          </div>
-        </div>
+        <MindMapReadViewer nodes={nodes} edges={edges} onNodeClick={handleNodeClick} />
 
         {/* Card flotante sobre el mapa para mostrar contenido del nodo */}
         {selectedNode && (
