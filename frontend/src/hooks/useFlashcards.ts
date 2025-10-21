@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Flashcard, FlashcardProgress } from "../types/flashcard";
+import type { Flashcard, FlashcardProgress } from "../types/flashcard";
 import { flashcardService } from "../services/flashcardService";
 
 export function useFlashcards(mindMapId?: string) {

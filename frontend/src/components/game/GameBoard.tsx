@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { type Edge } from '@xyflow/react';
-import { MindMap } from '../../types/mindmap';
+import type { MindMap } from '../../types/mindmap';
 import { MindMapViewer } from '../mindmap/MindMapViewer';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';

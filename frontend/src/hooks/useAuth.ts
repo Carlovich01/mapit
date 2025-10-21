@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { AuthState, RegisterRequest } from "../types/auth";
+import type { AuthState, RegisterRequest } from "../types/auth";
 import { authService } from "../services/authService";
 import { storage } from "../utils/storage";
 

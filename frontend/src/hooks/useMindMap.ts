@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MindMap, MindMapListItem } from "../types/mindmap";
+import type { MindMap, MindMapListItem } from "../types/mindmap";
 import { mindMapService } from "../services/mindMapService";
 
 export function useMindMap(id?: string) {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Flashcard } from '../../types/flashcard';
+import type { Flashcard } from '../../types/flashcard';
 import { FlashcardItem } from './FlashcardItem';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 
 interface FlashcardDeckProps {
   flashcards: Flashcard[];

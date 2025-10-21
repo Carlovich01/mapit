@@ -1,5 +1,5 @@
 import api from "./api";
-import { MindMap, MindMapListItem } from "../types/mindmap";
+import type { MindMap, MindMapListItem } from "../types/mindmap";
 
 export const mindMapService = {
   async uploadPDF(file: File, title?: string): Promise<MindMap> {
