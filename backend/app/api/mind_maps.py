@@ -41,23 +41,34 @@ async def create_mind_map(
         )
 
     # Create mind map
-    mind_map_service = MindMapService()
-    mind_map = await mind_map_service.create_mind_map_from_pdf(
-        db=db,
-        user_id=current_user.id,
-        pdf_bytes=pdf_bytes,
-        filename=file.filename,
-        title=title,
-    )
+    try:
+        mind_map_service = MindMapService()
+        mind_map = await mind_map_service.create_mind_map_from_pdf(
+            db=db,
+            user_id=current_user.id,
+            pdf_bytes=pdf_bytes,
+            filename=file.filename,
+            title=title,
+        )
 
-    # Generate flashcards in background (async)
-    flashcard_service = FlashcardService()
-    await flashcard_service.generate_flashcards_for_mind_map(
-        db=db, mind_map_id=mind_map.id, pdf_bytes=pdf_bytes
-    )
+        # Generate flashcards in background (async)
+        flashcard_service = FlashcardService()
+        await flashcard_service.generate_flashcards_for_mind_map(
+            db=db, mind_map_id=mind_map.id, pdf_bytes=pdf_bytes
+        )
 
-    # Convert to response format
-    return format_mind_map_response(mind_map)
+        # Convert to response format
+        return format_mind_map_response(mind_map)
+
+    except ValueError as e:
+        # Handle PDF processing errors (e.g., no text extractable)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except Exception as e:
+        # Handle unexpected errors
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error procesando el PDF: {str(e)}",
+        )
 
 
 @router.get("", response_model=list[MindMapListResponse])

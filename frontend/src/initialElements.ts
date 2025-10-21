@@ -115,7 +115,7 @@ export function initialElements() {
   nodes.push({
     id: "target",
     data: { label: "Target" },
-    position: { x: 0, y: 0 }, // Posición temporal, d3-force la ajustará
+    position: { x: 0, y: 0 }, // Posición temporal, el layout radial la ajustará
   });
 
   // Crear nodos periféricos
@@ -123,7 +123,7 @@ export function initialElements() {
     nodes.push({
       id: `${i}`,
       data: { label: `Source ${i + 1}` },
-      position: { x: 0, y: 0 }, // Posición temporal, d3-force la ajustará
+      position: { x: 0, y: 0 }, // Posición temporal, el layout radial la ajustará
     });
 
     edges.push({

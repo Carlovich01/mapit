@@ -4,6 +4,7 @@ import type { MindMap } from '../../types/mindmap';
 import { MindMapViewer } from '../mindmap/MindMapViewer';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { getNodeStyleForLevel } from '../../utils/nodeStyles';
 
 interface GameBoardProps {
   mindMap: MindMap;
@@ -15,14 +16,16 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   const [startTime] = useState(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  // Shuffle nodes for game mode
+  // Prepare nodes for game mode (positions will be set by radial layout)
   const shuffledNodes = mindMap.nodes.map((node) => ({
     ...node,
-    data: { label: node.label },
-    position: {
-      x: Math.random() * 800,
-      y: Math.random() * 600,
+    data: { 
+      label: node.label,
+      level: node.level,
+      content: node.content,
     },
+    position: node.position || { x: 0, y: 0 },
+    style: getNodeStyleForLevel(node.level),
   }));
 
   // Update elapsed time

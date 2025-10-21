@@ -42,8 +42,18 @@ class PDFService:
 
         Returns:
             Tuple of (extracted_text, content_hash)
+
+        Raises:
+            ValueError: If PDF contains insufficient text
         """
         text = await PDFService.extract_text_from_pdf(pdf_bytes)
         content_hash = PDFService.calculate_content_hash(pdf_bytes)
+
+        # Validate extracted text
+        if not text or len(text.strip()) < 50:
+            raise ValueError(
+                "El PDF no contiene suficiente texto extraíble. "
+                "Asegúrate de que el PDF contenga texto real y no solo imágenes escaneadas."
+            )
 
         return text, content_hash

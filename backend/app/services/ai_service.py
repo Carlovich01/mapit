@@ -42,32 +42,32 @@ El JSON debe tener esta estructura exacta:
   "title": "Título principal del contenido",
   "nodes": [
     {{"id": "1", "label": "Concepto principal", "content": "Descripción detallada", "level": 0}},
-    {{"id": "2", "label": "Subconcepto", "content": "Detalles", "level": 1}}
+    {{"id": "2", "label": "Subconcepto", "content": "Detalles", "level": 1}},
+    {{"id": "3", "label": "Otro subconcepto", "content": "Más detalles", "level": 1}}
   ],
   "edges": [
-    {{"id": "e1", "source": "1", "target": "2"}}
+    {{"id": "e1", "source": "1", "target": "2"}},
+    {{"id": "e2", "source": "1", "target": "3"}}
   ]
 }}
 
-Reglas:
+Reglas OBLIGATORIAS:
 1. Crea un nodo raíz (level 0) con el tema principal
 2. Crea nodos hijos (level 1, 2, etc.) para subtemas
 3. Usa IDs numéricos para nodos (1, 2, 3...) y "e1", "e2"... para edges
-4. El campo "content" debe tener información adicional relevante
-5. Asegúrate de que todos los nodos estén conectados al grafo principal
+4. El campo "content" debe tener información adicional relevante y específica
+5. TODOS los nodos DEBEN estar conectados (no nodos aislados)
 
 Texto a analizar:
 {text}
 
-Responde SOLO con el JSON:"""
+Responde SOLO con el JSON (sin markdown, sin explicaciones):"""
 
         try:
             response = await self.client.aio.models.generate_content(
                 model=self.model,
                 contents=prompt,
-                config=GenerateContentConfig(
-                    response_modalities=["TEXT"]
-                ),
+                config=GenerateContentConfig(response_modalities=["TEXT"]),
             )
 
             # Extract JSON from response
@@ -87,7 +87,13 @@ Responde SOLO con el JSON:"""
 
             # Validate structure
             if "nodes" not in structure or "edges" not in structure:
-                raise ValueError("Invalid structure from AI")
+                raise ValueError("Invalid structure from AI: missing nodes or edges")
+
+            # Validate minimum nodes
+            if len(structure["nodes"]) < 2:
+                raise ValueError(
+                    f"AI generated insufficient nodes: only {len(structure['nodes'])} node(s)"
+                )
 
             # Use provided title or AI-generated title
             if title:
@@ -95,21 +101,32 @@ Responde SOLO con el JSON:"""
 
             return structure
 
+        except json.JSONDecodeError as e:
+            # Log the error for debugging
+            print(f"JSON decode error: {str(e)}")
+            print(
+                f"Response text: {response_text if 'response_text' in locals() else 'N/A'}"
+            )
+            raise ValueError(
+                "La IA no pudo generar un mapa mental válido. "
+                "Por favor, intenta con un PDF diferente o con más contenido."
+            )
+        except ValueError as e:
+            # Re-raise validation errors
+            print(f"Validation error: {str(e)}")
+            raise ValueError(
+                f"Error al generar el mapa mental: {str(e)}. "
+                "El PDF puede ser muy corto o el contenido no es adecuado para generar un mapa mental."
+            )
         except Exception as e:
-            # Fallback: create a simple structure
-            fallback_title = title or "Mapa Mental"
-            return {
-                "title": fallback_title,
-                "nodes": [
-                    {
-                        "id": "1",
-                        "label": fallback_title,
-                        "content": text,
-                        "level": 0,
-                    }
-                ],
-                "edges": [],
-            }
+            # Log the error for debugging
+            print(f"Unexpected error generating mind map: {str(e)}")
+            print(
+                f"Response text (if available): {response_text if 'response_text' in locals() else 'N/A'}"
+            )
+            raise ValueError(
+                "Error inesperado al procesar el PDF con IA. "
+            )
 
     async def generate_flashcards(self, text: str, num_cards: int = 10) -> list[dict]:
         """
