@@ -79,7 +79,7 @@ export function MindMapDetail() {
             {/* Botones de acción */}
             <div className="flex gap-2 flex-shrink-0">
               <Link to={`/flashcards/${mindMap.id}`}>
-                <Button variant="outline" size="sm">Ver Flashcards</Button>
+                <Button variant="outline" size="sm">Flashcards</Button>
               </Link>
               <Link to={`/game/${mindMap.id}`}>
                 <Button size="sm">Jugar</Button>

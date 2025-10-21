@@ -62,7 +62,7 @@ export function useMindMaps() {
       const data = await mindMapService.getMindMaps();
       setMindMaps(data);
     } catch (err: any) {
-      setError(err.response?.data?.detail || "Error loading mind maps");
+      setError(err.response?.data?.detail || "Error al cargar mapas mentales");
     } finally {
       setLoading(false);
     }

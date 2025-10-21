@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useMindMap } from '../hooks/useMindMap';
 import { GameBoard } from '../components/game/GameBoard';
@@ -13,6 +13,43 @@ export function GamePage() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameResult, setGameResult] = useState<{ score: number; time: number } | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [bestScore, setBestScore] = useState<{ score: number; time: number } | null>(null);
+
+  // Cargar el mejor puntaje previo
+  useEffect(() => {
+    const loadBestScore = async () => {
+      if (!id) return;
+      
+      try {
+        const sessions = await gameService.listGameSessions(id, 100);
+        const completedSessions = sessions.filter(s => s.completed && s.score !== null);
+        
+        if (completedSessions.length > 0) {
+          // Encontrar la sesión con mejor puntaje
+          const best = completedSessions.reduce((prev, current) => {
+            // Priorizar por puntaje, y en caso de empate, por menor tiempo
+            if (current.score > prev.score) return current;
+            if (current.score === prev.score && 
+                current.time_elapsed_seconds !== null && 
+                prev.time_elapsed_seconds !== null &&
+                current.time_elapsed_seconds < prev.time_elapsed_seconds) {
+              return current;
+            }
+            return prev;
+          });
+          
+          setBestScore({
+            score: best.score,
+            time: best.time_elapsed_seconds || 0
+          });
+        }
+      } catch (error) {
+        console.error('Error loading best score:', error);
+      }
+    };
+    
+    loadBestScore();
+  }, [id]);
 
   const handleStartGame = async () => {
     if (!id) return;
@@ -36,6 +73,12 @@ export function GamePage() {
       const result = await gameService.completeGameSession(sessionId, edges, timeElapsed);
       setGameResult({ score: result.score, time: timeElapsed });
       setGameStarted(false);
+      
+      // Actualizar el mejor puntaje si este resultado es mejor
+      if (!bestScore || result.score > bestScore.score || 
+          (result.score === bestScore.score && timeElapsed < bestScore.time)) {
+        setBestScore({ score: result.score, time: timeElapsed });
+      }
     } catch (error) {
       console.error('Error completing game:', error);
     }
@@ -50,12 +93,19 @@ export function GamePage() {
   }
 
   if (gameResult) {
+    const isNewRecord = bestScore && (
+      gameResult.score > bestScore.score || 
+      (gameResult.score === bestScore.score && gameResult.time < bestScore.time)
+    );
+    
     return (
       <div className="h-screen flex items-center justify-center px-4">
         <div className="max-w-2xl w-full">
           <Card>
             <CardHeader>
-              <CardTitle className="text-center text-2xl">¡Juego Completado!</CardTitle>
+              <CardTitle className="text-center text-2xl">
+                {isNewRecord ? '🎉 ¡Nuevo Récord!' : '¡Juego Completado!'}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="text-center space-y-4">
@@ -76,6 +126,23 @@ export function GamePage() {
                 {gameResult.score === 100 && (
                   <div className="text-lg font-semibold text-green-600">
                     ¡Perfecto! Todas las conexiones son correctas
+                  </div>
+                )}
+                
+                {isNewRecord && (
+                  <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                    <p className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                      ⭐ ¡Has superado tu récord anterior!
+                    </p>
+                  </div>
+                )}
+                
+                {bestScore && !isNewRecord && (
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground mb-1">Tu mejor resultado sigue siendo:</p>
+                    <p className="text-sm font-semibold">
+                      {bestScore.score}% en {Math.floor(bestScore.time / 60)}:{(bestScore.time % 60).toString().padStart(2, '0')}
+                    </p>
                   </div>
                 )}
               </div>
@@ -112,6 +179,27 @@ export function GamePage() {
             </p>
           </div>
 
+          {bestScore && (
+            <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-primary mb-1">🏆 Tu Mejor Resultado</p>
+                  <div className="flex items-center gap-4 text-sm">
+                    <span className="font-bold text-2xl text-primary">
+                      {bestScore.score}%
+                    </span>
+                    <span className="text-muted-foreground">
+                      en {Math.floor(bestScore.time / 60)}:{(bestScore.time % 60).toString().padStart(2, '0')}
+                    </span>
+                  </div>
+                </div>
+                {bestScore.score === 100 && (
+                  <div className="text-3xl">⭐</div>
+                )}
+              </div>
+            </div>
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle>Instrucciones</CardTitle>
@@ -129,7 +217,7 @@ export function GamePage() {
               </ul>
               <div className="flex gap-2">
                 <Button onClick={handleStartGame} size="lg" className="flex-1">
-                  Comenzar Juego
+                  {bestScore ? 'Jugar de Nuevo' : 'Comenzar Juego'}
                 </Button>
                 <Button 
                   variant="outline" 
