@@ -132,7 +132,7 @@ export function Dashboard() {
                 <CardContent className="flex-grow flex flex-col justify-between">
                   <div className="mb-4">
                     <p className="text-xs text-muted-foreground">
-                      Creado: {format(new Date(mindMap.created_at), 'dd/MM/yyyy', { locale: es })}
+                      Creado: {format(new Date(new Date(mindMap.created_at).getTime() - 3 * 60 * 60 * 1000), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
                     </p>
                     {dueCount > 0 ? (
                       <p className="text-xs text-red-600 dark:text-red-400 mt-1 font-medium">

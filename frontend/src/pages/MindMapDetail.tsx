@@ -63,7 +63,6 @@ export function MindMapDetail() {
       <Card className="w-full">
         <CardHeader className="px-4 md:px-6">
           <div className="flex items-center justify-between">
-            <CardTitle>Mapa Mental Interactivo</CardTitle>
             <div className="flex items-center gap-2 text-sm">
               <span className="font-medium">Niveles:</span>
               {Array.from(new Set(mindMap.nodes.map(n => n.level))).sort((a, b) => a - b).map(level => {
