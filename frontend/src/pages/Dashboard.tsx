@@ -114,10 +114,16 @@ export function Dashboard() {
                         {mindMap.pdf_filename}
                       </CardDescription>
                     </div>
-                    {dueCount > 0 && (
+                    {dueCount > 0 ? (
                       <div className="ml-2 flex-shrink-0">
                         <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full animate-pulse">
                           {dueCount}
+                        </span>
+                      </div>
+                    ) : dueFlashcardCounts[mindMap.id] !== undefined && (
+                      <div className="ml-2 flex-shrink-0">
+                        <span className="inline-flex items-center justify-center w-6 h-6 text-green-600 dark:text-green-400">
+                          ✓
                         </span>
                       </div>
                     )}
@@ -128,9 +134,13 @@ export function Dashboard() {
                     <p className="text-xs text-muted-foreground">
                       Creado: {format(new Date(mindMap.created_at), 'dd/MM/yyyy', { locale: es })}
                     </p>
-                    {dueCount > 0 && (
+                    {dueCount > 0 ? (
                       <p className="text-xs text-red-600 dark:text-red-400 mt-1 font-medium">
                         📚 {dueCount} flashcard{dueCount !== 1 ? 's' : ''} para revisar
+                      </p>
+                    ) : dueFlashcardCounts[mindMap.id] !== undefined && (
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">
+                        ✅ Al día con las flashcards
                       </p>
                     )}
                   </div>
