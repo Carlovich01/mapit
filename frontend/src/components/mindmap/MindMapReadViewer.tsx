@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -22,11 +22,13 @@ const edgeTypes = {
 interface MindMapReadViewerProps {
   nodes: Node[];
   edges: Edge[];
+  onNodeClick?: (nodeId: string) => void;
 }
 
 function MindMapReadViewerInner({
   nodes: initialNodes,
   edges: initialEdges,
+  onNodeClick,
 }: MindMapReadViewerProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
@@ -132,17 +134,27 @@ function MindMapReadViewerInner({
     setNodes(updatedNodes);
   }, [initialNodes, initialEdges, setNodes]);
 
+  const handleNodeClick = useCallback(
+    (_event: React.MouseEvent, node: Node) => {
+      if (onNodeClick) {
+        onNodeClick(node.id);
+      }
+    },
+    [onNodeClick]
+  );
+
   return (
     <div className="floating-edges w-full" style={{ height: '600px' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
+        onNodeClick={handleNodeClick}
         edgeTypes={edgeTypes}
         connectionLineComponent={FloatingConnectionLine}
         nodesDraggable={false}
         nodesConnectable={false}
-        elementsSelectable={false}
+        elementsSelectable={true}
         minZoom={0.1}
         maxZoom={4}
         fitView

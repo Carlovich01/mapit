@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useMindMap } from '../hooks/useMindMap';
 import { MindMapReadViewer } from '../components/mindmap/MindMapReadViewer';
@@ -8,6 +9,7 @@ import { getNodeStyleForLevel, getColorForLevel } from '../utils/nodeStyles';
 export function MindMapDetail() {
   const { id } = useParams<{ id: string }>();
   const { mindMap, loading, error } = useMindMap(id);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   if (loading) {
     return <div>Cargando mapa mental...</div>;
@@ -39,6 +41,14 @@ export function MindMapDetail() {
     type: edge.type,
   }));
 
+  const selectedNode = selectedNodeId 
+    ? mindMap.nodes.find(n => n.id === selectedNodeId)
+    : null;
+
+  const handleNodeClick = (nodeId: string) => {
+    setSelectedNodeId(nodeId);
+  };
+
   return (
     <div className="w-full max-w-full space-y-4">
       <div className="flex items-center justify-between px-4">
@@ -60,69 +70,76 @@ export function MindMapDetail() {
         </div>
       </div>
 
-      <Card className="w-full">
-        <CardHeader className="px-4 md:px-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium">Niveles:</span>
-              {Array.from(new Set(mindMap.nodes.map(n => n.level))).sort((a, b) => a - b).map(level => {
-                const color = getColorForLevel(level);
-                return (
-                  <div 
-                    key={level}
-                    className="flex items-center gap-1 px-2 py-1 rounded"
-                    style={{ backgroundColor: color.bg, color: color.text }}
-                  >
-                    <span className="font-semibold">{level + 1}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <MindMapReadViewer nodes={nodes} edges={edges} />
-        </CardContent>
-      </Card>
-
-      <div className="px-4">
+      <div className="relative">
         <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Nodos del Mapa</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {mindMap.nodes.map((node) => {
-                const levelColor = getColorForLevel(node.level);
-                return (
-                  <div
-                    key={node.id}
-                    className="p-3 border rounded-lg hover:bg-accent transition-colors"
-                    style={{ borderLeftWidth: '4px', borderLeftColor: levelColor.bg }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span 
-                        className="px-2 py-1 text-xs font-semibold rounded"
-                        style={{ 
-                          backgroundColor: levelColor.bg, 
-                          color: levelColor.text 
-                        }}
-                      >
-                        Nivel {node.level + 1}
-                      </span>
-                      <h4 className="font-semibold">{node.label}</h4>
+          <CardHeader className="px-4 md:px-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium">Niveles:</span>
+                {Array.from(new Set(mindMap.nodes.map(n => n.level))).sort((a, b) => a - b).map(level => {
+                  const color = getColorForLevel(level);
+                  return (
+                    <div 
+                      key={level}
+                      className="flex items-center gap-1 px-2 py-1 rounded"
+                      style={{ backgroundColor: color.bg, color: color.text }}
+                    >
+                      <span className="font-semibold">{level + 1}</span>
                     </div>
-                    {node.content && (
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {node.content}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <MindMapReadViewer nodes={nodes} edges={edges} onNodeClick={handleNodeClick} />
           </CardContent>
         </Card>
+
+        {/* Card flotante sobre el mapa para mostrar contenido del nodo */}
+        {selectedNode && (
+          <div className="absolute top-4 right-4 z-10 w-80 md:w-96 max-h-[calc(100%-2rem)] overflow-y-auto">
+            <Card className="shadow-lg border-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg">Detalles del Nodo</CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedNodeId(null)}
+                  >
+                    ✕
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span 
+                      className="px-2 py-1 text-xs font-semibold rounded"
+                      style={{ 
+                        backgroundColor: getColorForLevel(selectedNode.level).bg, 
+                        color: getColorForLevel(selectedNode.level).text 
+                      }}
+                    >
+                      Nivel {selectedNode.level + 1}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{selectedNode.label}</h3>
+                  {selectedNode.content ? (
+                    <div className="text-sm text-muted-foreground leading-relaxed">
+                      {selectedNode.content}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">
+                      Este nodo no tiene contenido adicional.
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
