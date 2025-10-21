@@ -27,8 +27,14 @@ export function RegisterForm() {
       return;
     }
 
+    if (!fullName.trim()) {
+      setError('El nombre completo es obligatorio');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await register({ email, password, full_name: fullName || undefined });
+      await register({ email, password, full_name: fullName.trim() });
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Error al registrarse');
@@ -46,13 +52,14 @@ export function RegisterForm() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fullName">Nombre Completo (opcional)</Label>
+            <Label htmlFor="fullName">Nombre Completo</Label>
             <Input
               id="fullName"
               type="text"
-              placeholder="Tu nombre"
+              placeholder="Tu nombre completo"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              required
             />
           </div>
 

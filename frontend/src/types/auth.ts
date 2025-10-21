@@ -1,7 +1,7 @@
 export interface User {
   id: string;
   email: string;
-  full_name: string | null;
+  full_name: string;
   created_at: string;
 }
 
@@ -13,7 +13,7 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  full_name?: string;
+  full_name: string;
 }
 
 export interface AuthToken {

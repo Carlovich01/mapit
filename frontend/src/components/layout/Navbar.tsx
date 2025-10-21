@@ -25,7 +25,7 @@ export function Navbar() {
                 <Button variant="ghost" size="sm">Dashboard</Button>
               </Link>
               <span className="text-xs md:text-sm text-muted-foreground hidden md:block truncate max-w-[150px]">
-                {user?.email}
+                {user?.full_name}
               </span>
               <Button variant="outline" size="sm" onClick={handleLogout}>
                 Salir

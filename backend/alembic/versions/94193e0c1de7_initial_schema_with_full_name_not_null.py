@@ -1,8 +1,8 @@
-"""initial schema
+"""initial schema with full_name not null
 
-Revision ID: 3d49fe151723
+Revision ID: 94193e0c1de7
 Revises: 
-Create Date: 2025-10-20 13:58:52.525861
+Create Date: 2025-10-21 02:27:52.769526
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3d49fe151723'
+revision = '94193e0c1de7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('hashed_password', sa.String(length=255), nullable=False),
-    sa.Column('full_name', sa.String(length=255), nullable=True),
+    sa.Column('full_name', sa.String(length=255), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')

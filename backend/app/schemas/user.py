@@ -8,7 +8,7 @@ class UserCreate(BaseModel):
 
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=100)
-    full_name: str | None = None
+    full_name: str = Field(..., min_length=1, max_length=255)
 
 
 class UserResponse(BaseModel):
@@ -16,7 +16,7 @@ class UserResponse(BaseModel):
 
     id: UUID
     email: str
-    full_name: str | None
+    full_name: str
     created_at: datetime
 
     model_config = {"from_attributes": True}
