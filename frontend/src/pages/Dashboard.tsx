@@ -138,41 +138,44 @@ export function Dashboard() {
                     )}
                   </div>
                 </CardHeader>
-                <CardContent className="flex-grow flex flex-col justify-between">
-                  <div className="mb-4">
-                    <p className="text-xs text-muted-foreground">
-                      Creado: {format(new Date(new Date(mindMap.created_at).getTime() - 3 * 60 * 60 * 1000), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
-                    </p>
-                    {dueCount > 0 ? (
-                      <p className="text-xs text-red-600 dark:text-red-400 mt-1 font-medium">
-                        📚 {dueCount} flashcard{dueCount !== 1 ? 's' : ''} para revisar
+                <CardContent className="flex-grow flex flex-col">
+                  <div className="flex-grow"></div>
+                  <div className="mt-auto">
+                    <div className="mb-4">
+                      <p className="text-xs text-muted-foreground">
+                        Creado: {format(new Date(new Date(mindMap.created_at).getTime() - 3 * 60 * 60 * 1000), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
                       </p>
-                    ) : dueFlashcardCounts[mindMap.id] !== undefined && (
-                      <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">
-                        ✅ Al día con las flashcards
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex gap-2 mt-auto">
-                    <Link to={`/mind-maps/${mindMap.id}`} className="flex-1">
-                      <Button variant="outline" className="w-full" size="sm">
-                        Ver Mapa
-                      </Button>
-                    </Link>
-                    <Link to={`/flashcards/${mindMap.id}`} className="flex-1">
-                      <Button 
-                        variant={dueCount > 0 ? "default" : "outline"} 
-                        className="w-full relative" 
-                        size="sm"
-                      >
-                        Flashcards
-                      </Button>
-                    </Link>
-                    <Link to={`/game/${mindMap.id}`} className="flex-1">
-                      <Button variant="outline" className="w-full" size="sm">
-                        Jugar
-                      </Button>
-                    </Link>
+                      {dueCount > 0 ? (
+                        <p className="text-xs text-red-600 dark:text-red-400 mt-1 font-medium">
+                          📚 {dueCount} flashcard{dueCount !== 1 ? 's' : ''} para revisar
+                        </p>
+                      ) : dueFlashcardCounts[mindMap.id] !== undefined && (
+                        <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">
+                          ✅ Al día con las flashcards
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <Link to={`/mind-maps/${mindMap.id}`} className="flex-1">
+                        <Button variant="outline" className="w-full" size="sm">
+                          Ver Mapa
+                        </Button>
+                      </Link>
+                      <Link to={`/flashcards/${mindMap.id}`} className="flex-1">
+                        <Button 
+                          variant={dueCount > 0 ? "default" : "outline"} 
+                          className="w-full relative" 
+                          size="sm"
+                        >
+                          Flashcards
+                        </Button>
+                      </Link>
+                      <Link to={`/game/${mindMap.id}`} className="flex-1">
+                        <Button variant="outline" className="w-full" size="sm">
+                          Jugar
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
