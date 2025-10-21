@@ -6,7 +6,7 @@ from app.config import settings
 
 
 class AIService:
-    """Service for AI operations using Gemini 2.5 Flash."""
+    """Service for AI operations using Gemini Flash Latest."""
 
     def __init__(self):
         """Initialize AI service with Gemini client."""
@@ -54,11 +54,10 @@ Reglas:
 2. Crea nodos hijos (level 1, 2, etc.) para subtemas
 3. Usa IDs numéricos para nodos (1, 2, 3...) y "e1", "e2"... para edges
 4. El campo "content" debe tener información adicional relevante
-5. Crea entre 5-15 nodos según la complejidad del texto
-6. Asegúrate de que todos los nodos estén conectados al grafo principal
+5. Asegúrate de que todos los nodos estén conectados al grafo principal
 
 Texto a analizar:
-{text[:4000]}
+{text}
 
 Responde SOLO con el JSON:"""
 
@@ -67,7 +66,7 @@ Responde SOLO con el JSON:"""
                 model=self.model,
                 contents=prompt,
                 config=GenerateContentConfig(
-                    response_modalities=["TEXT"], temperature=0.7
+                    response_modalities=["TEXT"]
                 ),
             )
 
@@ -105,7 +104,7 @@ Responde SOLO con el JSON:"""
                     {
                         "id": "1",
                         "label": fallback_title,
-                        "content": text[:500],
+                        "content": text,
                         "level": 0,
                     }
                 ],
@@ -140,7 +139,7 @@ Reglas:
 4. Variar el tipo de preguntas (definición, comparación, aplicación)
 
 Texto:
-{text[:4000]}
+{text}
 
 Responde SOLO con el array JSON:"""
 
@@ -178,6 +177,6 @@ Responde SOLO con el array JSON:"""
             return [
                 {
                     "question": "¿Cuál es el tema principal del documento?",
-                    "answer": text[:200],
+                    "answer": text,
                 }
             ]
