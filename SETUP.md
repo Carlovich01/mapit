@@ -66,7 +66,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Configurar .env
-cp .env.example .env
 # Editar .env con tus credenciales
 
 # Iniciar PostgreSQL localmente (o usar Docker)

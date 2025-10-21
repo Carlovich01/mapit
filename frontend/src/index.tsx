@@ -5,7 +5,7 @@ import './index.css';
 
 const container = document.querySelector('#app');
 if (!container) {
-  throw new Error('Failed to find the root element');
+  throw new Error('No se pudo encontrar el elemento raíz');
 }
 const root = createRoot(container);
 
