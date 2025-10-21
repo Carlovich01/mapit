@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useRef } from "react";
 import {
   ReactFlow,
+  ReactFlowProvider,
   addEdge,
   Background,
+  Controls,
+  MiniMap,
   useNodesState,
   useEdgesState,
+  useReactFlow,
   type Connection,
   type Node,
   type Edge,
@@ -32,7 +36,7 @@ interface MindMapViewerProps {
   readOnly?: boolean;
 }
 
-export function MindMapViewer({
+function MindMapViewerInner({
   nodes: initialNodes,
   edges: initialEdges,
   isGameMode = false,
@@ -42,6 +46,8 @@ export function MindMapViewer({
   const [nodes, setNodes, onNodesChangeInternal] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChangeInternal] = useEdgesState(initialEdges);
   const simulationRef = useRef<d3.Simulation<SimulationNode, undefined> | null>(null);
+  const { fitView } = useReactFlow();
+  const fitViewAppliedRef = useRef(false);
 
   // Update nodes and edges when props change
   useEffect(() => {
@@ -75,6 +81,9 @@ export function MindMapViewer({
   // Configure d3-force simulation
   useEffect(() => {
     if (!nodes.length) return;
+
+    // Reset fitView flag when nodes change
+    fitViewAppliedRef.current = false;
 
     // Create simulation nodes with radius
     const simulationNodes: SimulationNode[] = nodes.map((node) => {
@@ -116,6 +125,8 @@ export function MindMapViewer({
       .alphaDecay(0.015)
       .velocityDecay(0.5);
 
+    let tickCount = 0;
+
     // Update positions on each tick
     simulation.on("tick", () => {
       setNodes((nds) =>
@@ -133,6 +144,15 @@ export function MindMapViewer({
           return node;
         })
       );
+
+      // Apply fitView after simulation has stabilized
+      tickCount++;
+      if (tickCount > 50 && !fitViewAppliedRef.current) {
+        fitViewAppliedRef.current = true;
+        setTimeout(() => {
+          fitView({ padding: 0.2, duration: 400 });
+        }, 100);
+      }
     });
 
     simulationRef.current = simulation;
@@ -140,7 +160,7 @@ export function MindMapViewer({
     return () => {
       simulation.stop();
     };
-  }, [edges, setNodes]);
+  }, [edges, setNodes, fitView]);
 
   // Handle node drag with d3-force
   const onNodeDragStart: NodeMouseHandler = useCallback(() => {
@@ -203,16 +223,34 @@ export function MindMapViewer({
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
-        fitView
         edgeTypes={edgeTypes}
         connectionLineComponent={FloatingConnectionLine}
         nodesDraggable={!readOnly || isGameMode}
         nodesConnectable={!readOnly || isGameMode}
         elementsSelectable={!readOnly || isGameMode}
+        minZoom={0.1}
+        maxZoom={4}
       >
         <Background />
+        <Controls showInteractive={false} />
+        <MiniMap 
+          nodeStrokeWidth={3}
+          zoomable
+          pannable
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          }}
+        />
       </ReactFlow>
     </div>
+  );
+}
+
+export function MindMapViewer(props: MindMapViewerProps) {
+  return (
+    <ReactFlowProvider>
+      <MindMapViewerInner {...props} />
+    </ReactFlowProvider>
   );
 }
 
