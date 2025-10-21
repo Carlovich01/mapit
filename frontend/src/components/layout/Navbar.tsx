@@ -12,32 +12,32 @@ export function Navbar() {
   };
 
   return (
-    <nav className="border-b bg-background">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to={isAuthenticated ? "/dashboard" : "/"} className="text-2xl font-bold text-primary">
+    <nav className="border-b bg-background w-full">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between max-w-full">
+        <Link to={isAuthenticated ? "/dashboard" : "/"} className="text-2xl font-bold text-primary flex-shrink-0">
           MapIT
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
           {isAuthenticated ? (
             <>
-              <Link to="/dashboard">
-                <Button variant="ghost">Dashboard</Button>
+              <Link to="/dashboard" className="hidden sm:block">
+                <Button variant="ghost" size="sm">Dashboard</Button>
               </Link>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs md:text-sm text-muted-foreground hidden md:block truncate max-w-[150px]">
                 {user?.email}
               </span>
-              <Button variant="outline" onClick={handleLogout}>
-                Cerrar Sesión
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Salir
               </Button>
             </>
           ) : (
             <>
               <Link to="/login">
-                <Button variant="ghost">Iniciar Sesión</Button>
+                <Button variant="ghost" size="sm">Iniciar Sesión</Button>
               </Link>
               <Link to="/register">
-                <Button>Registrarse</Button>
+                <Button size="sm">Registrarse</Button>
               </Link>
             </>
           )}

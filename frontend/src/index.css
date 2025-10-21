@@ -55,6 +55,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+  html {
+    overflow-x: hidden;
   }
 }
 
@@ -68,9 +72,5 @@
 
 .floating-edges .react-flow__handle {
   opacity: 0;
-}
-#app {
-  width: 100vw;
-  height: 100vh;
 }
 

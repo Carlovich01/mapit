@@ -4,7 +4,6 @@ import { useMindMaps } from '../hooks/useMindMap';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
 import { mindMapService } from '../services/mindMapService';
 import { format } from 'date-fns';
 
