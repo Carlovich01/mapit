@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Input } from '../components/ui/input';
 import { mindMapService } from '../services/mindMapService';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export function Dashboard() {
   const { mindMaps, loading, error, reload } = useMindMaps();
@@ -84,7 +85,7 @@ export function Dashboard() {
               </CardHeader>
               <CardContent className="flex-grow flex flex-col justify-between">
                 <p className="text-xs text-muted-foreground mb-4">
-                  Creado: {format(new Date(mindMap.created_at), 'PPP')}
+                  Creado: {format(new Date(mindMap.created_at), 'dd/MM/yyyy', { locale: es })}
                 </p>
                 <div className="flex gap-2 mt-auto">
                   <Link to={`/mind-maps/${mindMap.id}`} className="flex-1">
