@@ -21,7 +21,7 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
           {isAuthenticated ? (
             <>
-              <span className="text-xs md:text-sm text-muted-foreground hidden md:block truncate max-w-[150px]">
+              <span className="text-xs md:text-sm text-muted-foreground truncate max-w-[100px] md:max-w-[150px]">
                 {user?.full_name}
               </span>
               <Button variant="outline" size="sm" onClick={handleLogout}>
