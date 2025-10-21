@@ -3,13 +3,14 @@ import { Navbar } from './Navbar';
 
 interface LayoutProps {
   children: ReactNode;
+  showNavbar?: boolean;
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, showNavbar = true }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1 w-full py-8">
+      {showNavbar && <Navbar />}
+      <main className={showNavbar ? "flex-1 w-full py-8" : "flex-1 w-full"}>
         {children}
       </main>
     </div>

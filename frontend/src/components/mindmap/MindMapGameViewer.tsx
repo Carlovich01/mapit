@@ -76,7 +76,7 @@ function MindMapGameViewerInner({
   );
 
   return (
-    <div className="floating-edges game-mode w-full" style={{ height: '600px' }}>
+    <div className="floating-edges game-mode w-full h-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}

@@ -21,9 +21,6 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
           {isAuthenticated ? (
             <>
-              <Link to="/dashboard" className="hidden sm:block">
-                <Button variant="ghost" size="sm">Dashboard</Button>
-              </Link>
               <span className="text-xs md:text-sm text-muted-foreground hidden md:block truncate max-w-[150px]">
                 {user?.full_name}
               </span>

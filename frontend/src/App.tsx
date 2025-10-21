@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { Layout } from './components/layout/Layout';
 import { Home } from './pages/Home';
@@ -20,6 +20,61 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function AppContent() {
+  const location = useLocation();
+  
+  // Solo mostrar navbar en Home, Login, Register y Dashboard
+  const showNavbar = ['/', '/login', '/register', '/dashboard'].includes(location.pathname);
+
+  return (
+    <Layout showNavbar={showNavbar}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/mind-maps/:id"
+          element={
+            <ProtectedRoute>
+              <MindMapDetail />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/flashcards/:id"
+          element={
+            <ProtectedRoute>
+              <FlashcardsPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/game/:id"
+          element={
+            <ProtectedRoute>
+              <GamePage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Layout>
+  );
+}
+
 function App() {
   const checkAuth = useAuth((state) => state.checkAuth);
 
@@ -29,51 +84,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/mind-maps/:id"
-            element={
-              <ProtectedRoute>
-                <MindMapDetail />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/flashcards/:id"
-            element={
-              <ProtectedRoute>
-                <FlashcardsPage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/game/:id"
-            element={
-              <ProtectedRoute>
-                <GamePage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
+      <AppContent />
     </BrowserRouter>
   );
 }

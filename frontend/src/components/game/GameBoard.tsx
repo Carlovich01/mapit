@@ -3,7 +3,6 @@ import { type Edge } from '@xyflow/react';
 import type { MindMap } from '../../types/mindmap';
 import { MindMapGameViewer } from '../mindmap/MindMapGameViewer';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { getNodeStyleForLevel } from '../../utils/nodeStyles';
 
 interface GameBoardProps {
@@ -76,46 +75,38 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   };
 
   return (
-    <div className="w-full space-y-4">
-      <Card className="w-full">
-        <CardHeader className="px-4 md:px-6">
-          <div className="flex items-center justify-between">
-            <CardTitle>Juego de Reordenamiento</CardTitle>
-            <div className="flex items-center gap-4">
-              <div className="text-sm">
-                <span className="font-semibold">Tiempo:</span> {formatTime(elapsedTime)}
-              </div>
-              <div className="text-sm">
-                <span className="font-semibold">Conexiones:</span> {gameEdges.length} / {mindMap.edges.length}
-              </div>
+    <div className="h-full flex flex-col">
+      {/* Barra de información y controles */}
+      <div className="border-b bg-background px-4 py-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+          <div className="flex items-center gap-4">
+            <div className="text-sm">
+              <span className="font-semibold">Tiempo:</span> {formatTime(elapsedTime)}
+            </div>
+            <div className="text-sm">
+              <span className="font-semibold">Conexiones:</span> {gameEdges.length} / {mindMap.edges.length}
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="px-0">
-          <div className="mb-4 mx-4 md:mx-6 p-3 bg-muted rounded-lg">
-            <p className="text-sm">
-              <strong>Instrucciones:</strong> Arrastra y conecta los nodos para recrear el mapa mental original.
-              Conecta los nodos haciendo clic y arrastrando desde un nodo hacia otro.
-            </p>
-          </div>
+          <Button
+            onClick={handleSubmit}
+            size="sm"
+            disabled={gameEdges.length === 0}
+          >
+            Enviar Respuesta
+          </Button>
+        </div>
+      </div>
 
-          <MindMapGameViewer
-            nodes={shuffledNodes}
-            edges={gameEdges}
-            onEdgesChange={handleEdgesChange}
-          />
 
-          <div className="mt-4 mx-4 md:mx-6 flex justify-end">
-            <Button
-              onClick={handleSubmit}
-              size="lg"
-              disabled={gameEdges.length === 0}
-            >
-              Enviar Respuesta
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+
+      {/* Área de juego que ocupa todo el espacio restante */}
+      <div className="flex-1 relative">
+        <MindMapGameViewer
+          nodes={shuffledNodes}
+          edges={gameEdges}
+          onEdgesChange={handleEdgesChange}
+        />
+      </div>
     </div>
   );
 }
