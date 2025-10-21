@@ -68,7 +68,7 @@ function MindMapViewerInner({
     [edges, setEdges, readOnly, isGameMode, onEdgesChange]
   );
 
-  // Configure d3-hierarchy cluster layout radial
+  // Configure d3-hierarchy tree layout radial
   useEffect(() => {
     if (!nodes.length || !edges.length) return;
 
@@ -109,58 +109,34 @@ function MindMapViewerInner({
       nodesPerLevel.set(depth, (nodesPerLevel.get(depth) || 0) + 1);
     });
 
-    // Calculate required radius for each level to avoid overlap
-    const nodeWidth = 150; // Ancho estimado del nodo
-    const minSpacing = 80; // Espaciado mínimo entre nodos (aumentado)
-    const minLevelStep = 220; // Distancia mínima entre niveles consecutivos
+    // Calculate required radius based on tree depth and node count
+    // d3.tree() optimiza el espacio mejor que cluster
+    const maxNodesInLevel = Math.max(...Array.from(nodesPerLevel.values()));
+    const nodeWidth = 180; // Aumentado de 160
+    const minSpacing = 140; // Aumentado de 100
     
-    // Calculate radius for each level based on its node count
-    const levelRadii = new Map<number, number>();
-    levelRadii.set(0, 0); // Root at center
+    // Calcular radio basado en el nivel con más nodos con factor de seguridad
+    const safetyFactor = 1.6; // Factor de seguridad para distribucion no uniforme
+    const requiredCircumference = maxNodesInLevel * (nodeWidth + minSpacing) * safetyFactor;
+    const baseRadius = requiredCircumference / (2 * Math.PI);
     
-    for (let level = 1; level <= root.height; level++) {
-      const nodesInLevel = nodesPerLevel.get(level) || 0;
-      const prevRadius = levelRadii.get(level - 1) || 0;
-      
-      if (nodesInLevel > 0) {
-        // Calculate minimum circumference for this level
-        // C = n * (width + spacing)
-        const requiredCircumference = nodesInLevel * (nodeWidth + minSpacing);
-        
-        // Calculate minimum radius from circumference: r = C / (2π)
-        const minRadiusForCircumference = requiredCircumference / (2 * Math.PI);
-        
-        // Ensure minimum distance from previous level
-        const minRadiusFromPrev = prevRadius + minLevelStep;
-        
-        // Use the larger of both constraints
-        const radius = Math.max(minRadiusForCircumference, minRadiusFromPrev);
-        levelRadii.set(level, radius);
-      } else {
-        // No nodes at this level, maintain minimum spacing
-        levelRadii.set(level, prevRadius + minLevelStep);
-      }
-    }
-    
-    // Get the maximum radius (outermost level)
-    const maxRadius = levelRadii.get(root.height) || 400;
+    // Escalar el radio según la profundidad del árbol
+    const radiusPerLevel = Math.max(250, baseRadius / Math.max(root.height, 1));
+    const maxRadius = radiusPerLevel * root.height;
 
-    // Configure radial cluster layout
-    const clusterLayout = d3.cluster<any>()
+    // Configure radial tree layout (mejor para mapas mentales)
+    const treeLayout = d3.tree<any>()
       .size([2 * Math.PI, maxRadius])
       .separation((a, b) => {
-        // Siblings closer than non-siblings
-        return a.parent === b.parent ? 1 : 2;
+        // Separación agresiva para evitar solapamiento
+        const baseSep = a.parent === b.parent ? 2 : 4; // Aumentado de 1:2 a 2:4
+        // Ajustar separación según profundidad
+        const depthFactor = 1 + (a.depth * 0.2); // Más espacio en niveles profundos
+        return (baseSep / Math.max(a.depth, 1)) * depthFactor * 1.8; // Multiplicador adicional
       });
 
     // Apply layout
-    clusterLayout(root);
-    
-    // Adjust radii to match our calculated level radii
-    root.descendants().forEach((node: any) => {
-      const customRadius = levelRadii.get(node.depth) || 0;
-      node.y = customRadius;
-    });
+    treeLayout(root);
 
     // Convert polar coordinates to cartesian and update node positions
     const centerX = 600;
