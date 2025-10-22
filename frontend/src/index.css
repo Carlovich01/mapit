@@ -79,3 +79,40 @@
   opacity: 1;
 }
 
+/* Estilos para líneas de conexión */
+.react-flow__edge path {
+  stroke: #b1b1b7;
+  stroke-width: 2;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+/* Línea seleccionada */
+.react-flow__edge.selected path {
+  stroke: #3b82f6 !important;
+  stroke-width: 4 !important;
+}
+
+/* Línea al pasar el mouse */
+.react-flow__edge:hover path {
+  stroke: #6b7280 !important;
+  stroke-width: 3 !important;
+}
+
+/* Estilos para nodos */
+.react-flow__node {
+  transition: none;
+}
+
+/* Nodo seleccionado */
+.react-flow__node.selected {
+  box-shadow: 0 20px 70px -5px rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.15);
+  z-index: 1000 !important;
+}
+
+/* Nodo al pasar el mouse */
+.react-flow__node:hover {
+  box-shadow: 0 20px 70px -5px rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.08);
+}
+

@@ -12,8 +12,9 @@ interface GameBoardProps {
 
 export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   const [gameEdges, setGameEdges] = useState<Edge[]>([]);
-  const [startTime] = useState(Date.now());
+  const [startTime, setStartTime] = useState(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [resetKey, setResetKey] = useState(0);
 
   // Generate random positions once for nodes in game mode
   const shuffledNodes = useMemo(() => {
@@ -43,7 +44,7 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
       position: generateRandomPosition(),
       style: getNodeStyleForLevel(node.level),
     }));
-  }, [mindMap.nodes]);
+  }, [mindMap.nodes, resetKey]);
 
   // Update elapsed time
   useEffect(() => {
@@ -57,6 +58,13 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   const handleEdgesChange = useCallback((edges: Edge[]) => {
     setGameEdges(edges);
   }, []);
+
+  const handleReset = () => {
+    setGameEdges([]);
+    setStartTime(Date.now());
+    setElapsedTime(0);
+    setResetKey((prev) => prev + 1);
+  };
 
   const handleSubmit = () => {
     const submittedEdges = gameEdges.map((edge) => ({
@@ -87,13 +95,22 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
               <span className="font-semibold">Conexiones:</span> {gameEdges.length} / {mindMap.edges.length}
             </div>
           </div>
-          <Button
-            onClick={handleSubmit}
-            size="sm"
-            disabled={gameEdges.length === 0}
-          >
-            Enviar Respuesta
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={handleReset}
+              size="sm"
+              variant="outline"
+            >
+              Reiniciar
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              size="sm"
+              disabled={gameEdges.length === 0}
+            >
+              Enviar
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -88,8 +88,11 @@ function MindMapGameViewerInner({
         nodesDraggable={true}
         nodesConnectable={true}
         elementsSelectable={true}
+        edgesFocusable={true}
         minZoom={0.1}
         maxZoom={4}
+        connectionRadius={360}
+        connectOnClick={true}
         fitView
       >
         <Background />

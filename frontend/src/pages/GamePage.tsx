@@ -139,7 +139,7 @@ export function GamePage() {
                 
                 {bestScore && !isNewRecord && (
                   <div className="bg-muted rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Tu mejor resultado sigue siendo:</p>
+                    <p className="text-xs text-muted-foreground mb-1">Tu mejor resultado es:</p>
                     <p className="text-sm font-semibold">
                       {bestScore.score}% en {Math.floor(bestScore.time / 60)}:{(bestScore.time % 60).toString().padStart(2, '0')}
                     </p>
