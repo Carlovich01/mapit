@@ -5,6 +5,7 @@ import { GameBoard } from '../components/game/GameBoard';
 import { gameService } from '../services/gameService';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import LogoMapit from '../assets/LogoMapit.svg';
 
 export function GamePage() {
   const { id } = useParams<{ id: string }>();
@@ -103,8 +104,14 @@ export function GamePage() {
         <div className="max-w-2xl w-full">
           <Card>
             <CardHeader>
-              <CardTitle className="text-center text-2xl">
-                {isNewRecord ? '🎉 ¡Nuevo Récord!' : '¡Juego Completado!'}
+              <CardTitle className="flex items-center justify-center gap-3 text-2xl">
+                <img 
+                  src={LogoMapit} 
+                  alt="MapIT Logo" 
+                  className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity" 
+                  onClick={() => navigate('/dashboard')}
+                />
+                <span>{isNewRecord ? '🎉 ¡Nuevo Récord!' : '¡Juego Completado!'}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -171,51 +178,65 @@ export function GamePage() {
   if (!gameStarted) {
     return (
       <div className="h-screen flex items-center justify-center px-4">
-        <div className="max-w-2xl w-full space-y-4">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Juego de Reordenamiento</h1>
-            <p className="text-muted-foreground">
-              Mapa: {mindMap.title}
-            </p>
-          </div>
-
-          {bestScore && (
-            <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-primary mb-1">🏆 Tu Mejor Resultado</p>
-                  <div className="flex items-center gap-4 text-sm">
-                    <span className="font-bold text-2xl text-primary">
-                      {bestScore.score}%
-                    </span>
-                    <span className="text-muted-foreground">
-                      en {Math.floor(bestScore.time / 60)}:{(bestScore.time % 60).toString().padStart(2, '0')}
-                    </span>
-                  </div>
-                </div>
-                {bestScore.score === 100 && (
-                  <div className="text-3xl">⭐</div>
-                )}
-              </div>
-            </div>
-          )}
-
+        <div className="max-w-2xl w-full">
           <Card>
             <CardHeader>
-              <CardTitle>Instrucciones</CardTitle>
+              <CardTitle className="flex items-center gap-3">
+                <img 
+                  src={LogoMapit} 
+                  alt="MapIT Logo" 
+                  className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity" 
+                  onClick={() => navigate('/dashboard')}
+                />
+                <span>Juego de Reordenamiento</span>
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p>
-                En este juego, se desordenarán los nodos del mapa mental.
-                Tu objetivo es reconectar todos los nodos en la estructura correcta.
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-                <li>Arrastra los nodos para organizarlos</li>
-                <li>Haz clic y arrastra desde un nodo hacia otro para crear una conexión</li>
-                <li>Intenta recrear todas las conexiones del mapa original</li>
-                <li>Tu puntuación se basará en la precisión de las conexiones</li>
-              </ul>
-              <div className="flex gap-2">
+              {/* Información del mapa */}
+              <div>
+                <p className="text-sm font-semibold text-muted-foreground mb-1">Mapa:</p>
+                <p>{mindMap.title}</p>
+              </div>
+
+              {/* Mejor resultado */}
+              {bestScore && (
+                <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-primary mb-1">🏆 Tu Mejor Resultado</p>
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="font-bold text-2xl text-primary">
+                          {bestScore.score}%
+                        </span>
+                        <span className="text-muted-foreground">
+                          en {Math.floor(bestScore.time / 60)}:{(bestScore.time % 60).toString().padStart(2, '0')}
+                        </span>
+                      </div>
+                    </div>
+                    {bestScore.score === 100 && (
+                      <div className="text-3xl">⭐</div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Instrucciones */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Instrucciones</h3>
+                <p className="text-sm">
+                  En este juego, se desordenarán los nodos del mapa mental.
+                  Tu objetivo es reconectar todos los nodos en la estructura correcta.
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                  <li>Arrastra los nodos para organizarlos</li>
+                  <li>Haz clic y arrastra desde un nodo hacia otro para crear una conexión</li>
+                  <li>Intenta recrear todas las conexiones del mapa original</li>
+                  <li>Tu puntuación se basará en la precisión de las conexiones</li>
+                </ul>
+              </div>
+
+              {/* Botones */}
+              <div className="flex gap-2 pt-2">
                 <Button onClick={handleStartGame} size="lg" className="flex-1">
                   {bestScore ? 'Jugar de Nuevo' : 'Comenzar Juego'}
                 </Button>
@@ -242,14 +263,12 @@ export function GamePage() {
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <Button
-                variant="ghost"
-                size="sm"
+              <img 
+                src={LogoMapit} 
+                alt="MapIT Logo" 
+                className="h-10 w-10 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity" 
                 onClick={() => navigate('/dashboard')}
-                className="flex-shrink-0"
-              >
-                ← Volver
-              </Button>
+              />
               <div className="min-w-0 flex-1">
                 <h1 className="text-xl md:text-2xl font-bold truncate">Juego de Reordenamiento</h1>
                 {mindMap && (

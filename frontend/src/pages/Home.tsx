@@ -2,6 +2,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import LogoMapit from '../assets/LogoMapit.svg';
 
 export function Home() {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
@@ -14,13 +15,16 @@ export function Home() {
   return (
     <div className="max-w-4xl mx-auto space-y-12">
       <div className="text-center space-y-4 py-12">
+        <div className="flex justify-center mb-6">
+          <img src={LogoMapit} alt="MapIT Logo" className="h-32 w-32" />
+        </div>
         <h1 className="text-5xl font-bold">Bienvenido a MapIT</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Transforma tus PDFs en herramientas de aprendizaje interactivas con IA
         </p>
         <div className="flex gap-4 justify-center pt-4">
           <Link to="/register">
-            <Button size="lg">Comenzar Gratis</Button>
+            <Button size="lg">Registrarse</Button>
           </Link>
           <Link to="/login">
             <Button size="lg" variant="outline">Iniciar Sesión</Button>

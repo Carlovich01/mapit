@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../ui/button';
+import LogoMapit from '../../assets/LogoMapit.svg';
 
 export function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -14,8 +15,9 @@ export function Navbar() {
   return (
     <nav className="border-b bg-background w-full">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between max-w-full">
-        <Link to={isAuthenticated ? "/dashboard" : "/"} className="text-2xl font-bold text-primary flex-shrink-0">
-          MapIT
+        <Link to={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2 flex-shrink-0">
+          <img src={LogoMapit} alt="MapIT Logo" className="h-10 w-10" />
+          <span className="text-2xl font-bold text-primary">MapIT</span>
         </Link>
 
         <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
