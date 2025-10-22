@@ -68,6 +68,8 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
       flashcard={currentCard}
       onReview={handleReview}
       disabled={reviewing}
+      currentIndex={currentIndex}
+      totalCards={flashcards.length}
     />
   );
 }

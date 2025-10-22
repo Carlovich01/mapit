@@ -159,13 +159,13 @@ export function Dashboard() {
                     </div>
                     <div className="flex gap-2">
                       <Link to={`/mind-maps/${mindMap.id}`} className="flex-1">
-                        <Button variant="outline" className="w-full" size="sm">
+                        <Button variant="default" className="w-full" size="sm">
                           Ver Mapa
                         </Button>
                       </Link>
                       <Link to={`/flashcards/${mindMap.id}`} className="flex-1">
                         <Button 
-                          variant={dueCount > 0 ? "default" : "outline"} 
+                          variant="default"
                           className="w-full relative" 
                           size="sm"
                         >
@@ -173,7 +173,7 @@ export function Dashboard() {
                         </Button>
                       </Link>
                       <Link to={`/game/${mindMap.id}`} className="flex-1">
-                        <Button variant="outline" className="w-full" size="sm">
+                        <Button variant="default" className="w-full" size="sm">
                           Jugar
                         </Button>
                       </Link>

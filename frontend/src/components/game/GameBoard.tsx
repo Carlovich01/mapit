@@ -85,7 +85,7 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   return (
     <div className="h-full flex flex-col">
       {/* Barra de información y controles */}
-      <div className="border-b bg-background px-4 py-2">
+      <div className="border-b bg-white px-4 py-2">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
           <div className="flex items-center gap-4">
             <div className="text-sm">

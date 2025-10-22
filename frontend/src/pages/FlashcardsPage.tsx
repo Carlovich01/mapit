@@ -3,6 +3,7 @@ import { useMindMap } from '../hooks/useMindMap';
 import { useDueFlashcards } from '../hooks/useFlashcards';
 import { FlashcardDeck } from '../components/flashcards/FlashcardDeck';
 import { Card, CardContent } from '../components/ui/card';
+import { Button } from '../components/ui/button';
 import LogoMapit from '../assets/LogoMapit.svg';
 
 export function FlashcardsPage() {
@@ -32,7 +33,7 @@ export function FlashcardsPage() {
   return (
     <div className="h-screen flex flex-col">
       {/* Header personalizado */}
-      <div className="border-b bg-background">
+      <div className="border-b bg-white">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
             <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -60,36 +61,25 @@ export function FlashcardsPage() {
         <div className="container mx-auto px-4 py-4 space-y-4">
           {flashcardsToReview.length === 0 ? (
             <Card>
-              <CardContent className="p-8 text-center space-y-2">
+              <CardContent className="p-8 text-center space-y-4">
                 <div className="text-4xl mb-2">✅</div>
                 <h3 className="text-lg font-semibold">¡Al día con tus revisiones!</h3>
                 <p className="text-muted-foreground">
                   No hay flashcards pendientes de revisar en este momento.
                 </p>
-                <p className="text-sm text-muted-foreground mt-4">
+                <p className="text-sm text-muted-foreground">
                   Vuelve más tarde cuando tus flashcards estén listas para una nueva revisión.
                 </p>
+                <Button 
+                  onClick={() => navigate('/dashboard')}
+                  className="mt-4"
+                >
+                  Volver al Dashboard
+                </Button>
               </CardContent>
             </Card>
           ) : (
-            <>
-              <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">📚</span>
-                    <div>
-                      <p className="font-semibold text-blue-900 dark:text-blue-100">
-                        {flashcardsToReview.length} flashcard{flashcardsToReview.length !== 1 ? 's' : ''} vencida{flashcardsToReview.length !== 1 ? 's' : ''}
-                      </p>
-                      <p className="text-sm text-blue-700 dark:text-blue-300">
-                        Es momento de repasar para mantener tu memoria fresca
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <FlashcardDeck flashcards={flashcardsToReview} onReview={handleReview} />
-            </>
+            <FlashcardDeck flashcards={flashcardsToReview} onReview={handleReview} />
           )}
         </div>
       </div>

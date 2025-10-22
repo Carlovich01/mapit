@@ -259,7 +259,7 @@ export function GamePage() {
   return (
     <div className="h-screen flex flex-col">
       {/* Header personalizado */}
-      <div className="border-b bg-background">
+      <div className="border-b bg-white">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
             <div className="flex items-center gap-3 flex-1 min-w-0">

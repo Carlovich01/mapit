@@ -1,15 +1,15 @@
 /* xyflow theme files. Delete these to start from our base */
 
 .react-flow {
-  --xy-background-color: #f7f9fb;
+  --xy-background-color: #f3f4f6;
   /* Custom Variables */
-  --xy-theme-selected: #f57dbd;
-  --xy-theme-hover: #c5c5c5;
-  --xy-theme-edge-hover: black;
-  --xy-theme-color-focus: #e8e8e8;
+  --xy-theme-selected: #2563eb;
+  --xy-theme-hover: #3b82f6;
+  --xy-theme-edge-hover: #1c4da3;
+  --xy-theme-color-focus: #3b82f6;
 
   /* Built-in Variables see https://reactflow.dev/learn/customization/theming */
-  --xy-node-border-default: 1px solid #ededed;
+  --xy-node-border-default: 1px solid #e5e7eb;
 
   --xy-node-boxshadow-default:
     0px 3.54px 4.55px 0px #00000005, 0px 3.54px 4.55px 0px #0000000d,
@@ -18,17 +18,23 @@
   --xy-node-border-radius-default: 8px;
 
   --xy-handle-background-color-default: #ffffff;
-  --xy-handle-border-color-default: #aaaaaa;
+  --xy-handle-border-color-default: #2563eb;
 
-  --xy-edge-label-color-default: #505050;
+  --xy-edge-label-color-default: #111827;
 }
 
 .react-flow.dark {
+  --xy-background-color: #111827;
   --xy-node-boxshadow-default:
-    0px 3.54px 4.55px 0px rgba(255, 255, 255, 0.05),
-    /* light shadow */ 0px 3.54px 4.55px 0px rgba(255, 255, 255, 0.13),
-    /* medium shadow */ 0px 0.51px 1.01px 0px rgba(255, 255, 255, 0.2); /* smallest shadow */
-  --xy-theme-color-focus: #535353;
+    0px 3.54px 4.55px 0px rgba(59, 130, 246, 0.15),
+    0px 3.54px 4.55px 0px rgba(59, 130, 246, 0.23),
+    0px 0.51px 1.01px 0px rgba(59, 130, 246, 0.3);
+  --xy-theme-color-focus: #3b82f6;
+  --xy-theme-selected: #3b82f6;
+  --xy-theme-hover: #2563eb;
+  --xy-theme-edge-hover: #21589b;
+  --xy-handle-border-color-default: #3b82f6;
+  --xy-edge-label-color-default: #f3f4f6;
 }
 
 /* Customizing Default Theming */
@@ -68,8 +74,8 @@
 }
 
 .react-flow__node-group {
-  background-color: rgba(207, 182, 255, 0.4);
-  border-color: #9e86ed;
+  background-color: rgba(37, 99, 235, 0.1);
+  border-color: #2563eb;
 }
 
 .react-flow__edge.selectable:hover .react-flow__edge-path,
@@ -100,7 +106,7 @@
 
 .react-flow__resize-control.handle {
   background-color: #ffffff;
-  border-color: #9e86ed;
+  border-color: #2563eb;
   border-radius: 0;
   width: 5px;
   height: 5px;
@@ -121,10 +127,10 @@
 */
 
 :root {
-  --color-primary: #ff0073;
-  --color-background: #fefefe;
-  --color-hover-bg: #f6f6f6;
-  --color-disabled: #76797e;
+  --color-primary: #2563eb;
+  --color-background: #f3f4f6;
+  --color-hover-bg: #e5e7eb;
+  --color-disabled: #9ca3af;
 }
 
 .xy-theme__button-group {
@@ -211,7 +217,7 @@
 .xy-theme__input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(255, 0, 115, 0.3);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
 }
 
 /* Specific Checkbox Styling */
@@ -239,7 +245,7 @@
 
 .xy-theme__checkbox:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 0, 115, 0.3);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
 }
 
 /* Dropdown Styling */
@@ -260,7 +266,7 @@
 .xy-theme__select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(255, 0, 115, 0.3);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
 }
 
 .xy-theme__label {

@@ -54,7 +54,7 @@ export function MindMapDetail() {
   return (
     <div className="h-screen flex flex-col">
       {/* Header personalizado sticky */}
-      <div className="border-b bg-background sticky top-0 z-20">
+      <div className="border-b bg-white sticky top-0 z-20">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
             {/* Fila superior: Logo + Título + Fuente */}

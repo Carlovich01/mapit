@@ -27,7 +27,7 @@ export function Home() {
             <Button size="lg">Registrarse</Button>
           </Link>
           <Link to="/login">
-            <Button size="lg" variant="outline">Iniciar Sesión</Button>
+            <Button size="lg" variant="outline" className="bg-white hover: #3b82f6">Iniciar Sesión</Button>
           </Link>
         </div>
       </div>
