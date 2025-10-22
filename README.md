@@ -44,7 +44,7 @@
 - **Routing:** React Router DOM 7
 - **State:** Zustand
 - **HTTP:** Axios
-- **Visualización:** React Flow + D3-force
+- **Visualización:** React Flow + d3-hierarchy
 
 ### DevOps
 - **Contenedores:** Docker + Docker Compose
@@ -259,15 +259,3 @@ Para el juego de reordenamiento:
 3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT.
-
-## Soporte
-
-Para problemas o preguntas, abre un issue en el repositorio.
-
----
-
-Desarrollado con ❤️ usando React, FastAPI y Gemini AI
