@@ -2,16 +2,16 @@ from typing import Set, Tuple
 
 
 class GraphValidator:
-    """Validate graph structure for the reordering game."""
+    """Validar la estructura del gráfico para el juego de reordenamiento."""
 
     @staticmethod
     def normalize_edge(source: str, target: str) -> Tuple[str, str]:
-        """Normalize an edge by sorting node IDs (for undirected comparison)."""
+        """Normalizar una arista ordenando los IDs de los nodos (para comparación no dirigida)."""
         return tuple(sorted([source, target]))
 
     @staticmethod
     def edges_to_set(edges: list[dict]) -> Set[Tuple[str, str]]:
-        """Convert list of edges to a set of normalized tuples."""
+        """Convertir lista de aristas a un conjunto de tuplas normalizadas."""
         edge_set = set()
         for edge in edges:
             source = edge.get("source") or edge.get("source_node_id")
@@ -23,11 +23,11 @@ class GraphValidator:
     @staticmethod
     def calculate_score(original_edges: list[dict], submitted_edges: list[dict]) -> int:
         """
-        Calculate score by comparing submitted edges with original edges.
+        Calcular la puntuación comparando las aristas enviadas con las aristas originales.
 
-        Returns score out of 100:
-        - 100: perfect match (all edges correct)
-        - 0-99: partial score based on correct edges
+        Devuelve una puntuación sobre 100:
+        - 100: coincidencia perfecta (todos los bordes son correctos)
+        - 0-99: puntuación parcial basada en los bordes correctos
         """
         if not original_edges:
             return 100 if not submitted_edges else 0
@@ -47,5 +47,5 @@ class GraphValidator:
     def validate_exact_match(
         original_edges: list[dict], submitted_edges: list[dict]
     ) -> bool:
-        """Check if submitted edges exactly match original edges."""
+        """Verificar si los bordes enviados coinciden exactamente con los bordes originales."""
         return GraphValidator.calculate_score(original_edges, submitted_edges) == 100

@@ -5,7 +5,7 @@ import { LoginForm } from '../components/auth/LoginForm';
 export function Login() {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
-  // Redirect to dashboard if already logged in
+  // Redirigir al panel de control si ya ha iniciado sesión
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }

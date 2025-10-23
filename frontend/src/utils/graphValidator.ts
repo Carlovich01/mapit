@@ -1,5 +1,5 @@
 /**
- * Graph validation utilities for the reordering game
+ * Utilidades de validación de gráficos para el juego de reordenamiento
  */
 
 export interface Edge {
@@ -27,7 +27,7 @@ export function validateGraphStructure(
     submittedEdges.map((e) => normalizeEdge(e.source, e.target))
   );
 
-  // Count correct edges
+  // Contar bordes correctos
   let correctCount = 0;
   for (const edge of submittedSet) {
     if (originalSet.has(edge)) {
@@ -35,7 +35,7 @@ export function validateGraphStructure(
     }
   }
 
-  // Calculate score
+  // Calcular puntuación
   const score = Math.round((correctCount / originalSet.size) * 100);
   return score;
 }

@@ -34,12 +34,12 @@ function FloatingEdge({ id, source, target, style }: FloatingEdgeProps) {
     targetY: ty,
   });
 
-  // Get color based on source node level
+  // Obtener color según el nivel del nodo de origen
   const sourceLevel = (sourceNode.data as any)?.level ?? 0;
   const edgeColor = getColorForLevel(sourceLevel);
   
-  // Use custom marker with matching color
-  const markerLevel = sourceLevel % 8; // Cycle through 8 defined markers
+  // Utilice un marcador personalizado con un color coincidente
+  const markerLevel = sourceLevel % 8; // Recorrer 8 marcadores definidos
   const customMarkerEnd = `url(#arrow-${markerLevel})`;
 
   return (

@@ -16,15 +16,15 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [resetKey, setResetKey] = useState(0);
 
-  // Generate random positions once for nodes in game mode
+  // Generar posiciones aleatorias una vez para los nodos en el modo de juego
   const shuffledNodes = useMemo(() => {
     const generateRandomPosition = () => {
-      // Distribute nodes randomly in a large area
+      // Distribuir nodos aleatoriamente en un área grande
       const centerX = 600;
       const centerY = 400;
       const spreadRadius = 400;
-      
-      // Use a random angle and radius for each node
+
+      // Usar un ángulo y radio aleatorios para cada nodo
       const angle = (Math.random() * 2 * Math.PI);
       const radius = Math.random() * spreadRadius;
       
@@ -46,7 +46,7 @@ export function GameBoard({ mindMap, onComplete }: GameBoardProps) {
     }));
   }, [mindMap.nodes, resetKey]);
 
-  // Update elapsed time
+  // Actualizar el tiempo transcurrido
   useEffect(() => {
     const timer = setInterval(() => {
       setElapsedTime(Math.floor((Date.now() - startTime) / 1000));

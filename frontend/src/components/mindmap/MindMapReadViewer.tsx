@@ -33,7 +33,7 @@ function MindMapReadViewerInner({
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
 
-  // Update nodes and edges when props change
+  // Actualizar nodos y bordes cuando cambian los accesorios
   useEffect(() => {
     setNodes(initialNodes);
   }, [initialNodes, setNodes]);
@@ -42,18 +42,18 @@ function MindMapReadViewerInner({
     setEdges(initialEdges);
   }, [initialEdges, setEdges]);
 
-  // Configure d3-hierarchy tree layout radial
+  // Configurar el diseño radial del árbol de jerarquía d3
   useEffect(() => {
     if (!nodes.length || !edges.length) return;
 
-    // Build hierarchical structure from nodes and edges
+    // Construir estructura jerárquica a partir de nodos y bordes
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
-    
-    // Find root node (level 0)
+
+    // Encontrar nodo raíz (nivel 0)
     const rootNode = nodes.find((n) => (n.data as any).level === 0);
     if (!rootNode) return;
 
-    // Build tree structure
+    // Construir estructura del árbol
     const buildTree = (nodeId: string): any => {
       const node = nodeMap.get(nodeId);
       if (!node) return null;
@@ -73,17 +73,17 @@ function MindMapReadViewerInner({
     const treeData = buildTree(rootNode.id);
     if (!treeData) return;
 
-    // Create hierarchy
+    // Crear jerarquía
     const root = d3.hierarchy(treeData);
 
-    // Calculate nodes per level to determine radius needed for each level
+    // Calcular nodos por nivel para determinar el radio necesario para cada nivel
     const nodesPerLevel = new Map<number, number>();
     root.descendants().forEach((node) => {
       const depth = node.depth;
       nodesPerLevel.set(depth, (nodesPerLevel.get(depth) || 0) + 1);
     });
 
-    // Calculate required radius based on tree depth and node count
+    // Calcular radio requerido basado en la profundidad del árbol y el recuento de nodos
     const maxNodesInLevel = Math.max(...Array.from(nodesPerLevel.values()));
     const nodeWidth = 180;
     const minSpacing = 140;
@@ -97,7 +97,7 @@ function MindMapReadViewerInner({
     const radiusPerLevel = Math.max(250, baseRadius / Math.max(root.height, 1));
     const maxRadius = radiusPerLevel * root.height;
 
-    // Configure radial tree layout
+    // Configurar diseño radial del árbol
     const treeLayout = d3.tree<any>()
       .size([2 * Math.PI, maxRadius])
       .separation((a, b) => {
@@ -106,10 +106,10 @@ function MindMapReadViewerInner({
         return (baseSep / Math.max(a.depth, 1)) * depthFactor * 1.8;
       });
 
-    // Apply layout
+    // Aplicar diseño
     treeLayout(root);
 
-    // Convert polar coordinates to cartesian and update node positions
+    // Convertir coordenadas polares a cartesianas y actualizar las posiciones de los nodos
     const centerX = 600;
     const centerY = 500;
 
@@ -119,7 +119,7 @@ function MindMapReadViewerInner({
         const angle = (descendant as any).x;
         const radius = (descendant as any).y;
         
-        // Convert polar to cartesian
+        // Convertir polar a cartesiana
         const x = centerX + radius * Math.cos(angle - Math.PI / 2);
         const y = centerY + radius * Math.sin(angle - Math.PI / 2);
 

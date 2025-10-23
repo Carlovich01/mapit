@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-# Import your models and Base
+# Importa tus modelos y Base
 from app.database import Base
 from app.models import (
     User,
@@ -20,40 +20,34 @@ from app.models import (
     GameSession,
 )
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
+# este es el objeto Alembic Config, que proporciona
+# acceso a los valores dentro del archivo .ini en uso.
 config = context.config
 
-# Override sqlalchemy.url with environment variable if available
+# Anule sqlalchemy.url con la variable de entorno si está disponible
 if os.environ.get("DATABASE_URL"):
     config.set_main_option("sqlalchemy.url", os.environ.get("DATABASE_URL"))
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+# Interpretar el archivo de configuración para el registro de Python.
+# Esta línea configura los loggers básicamente.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
+# Agregue aquí el objeto MetaData de su modelo
+# para soporte de 'autogeneración'
 target_metadata = Base.metadata
 
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
+# otros valores de la configuración, definidos por las necesidades de env.py,
+# pueden ser adquiridos:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-
+    """Ejecutar migraciones en modo "sin conexión". Esto configura el contexto 
+    solo con una URL y no con un motor, aunque también se acepta un motor. 
+    Al omitir la creación del motor, ni siquiera necesitamos que esté disponible una API de base de datos (DBAPI).
+    Las llamadas a context.execute() emiten la cadena dada a la salida del script.
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
@@ -75,10 +69,7 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
-    """In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
+    """En este escenario, necesitamos crear un motor y asociar una conexión con el contexto."""
 
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
@@ -93,7 +84,7 @@ async def run_async_migrations() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode."""
+    """Ejecutar migraciones en modo "en línea"."""
 
     asyncio.run(run_async_migrations())
 

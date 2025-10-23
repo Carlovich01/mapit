@@ -4,7 +4,7 @@ from datetime import datetime, date
 
 
 class FlashcardResponse(BaseModel):
-    """Schema for flashcard response."""
+    """Esquema para la respuesta de la flashcard."""
 
     id: UUID
     question: str
@@ -15,15 +15,15 @@ class FlashcardResponse(BaseModel):
 
 
 class FlashcardReview(BaseModel):
-    """Schema for reviewing a flashcard."""
+    """Esquema para la revisión de una flashcard."""
 
     quality: int = Field(
-        ..., ge=0, le=5, description="Quality of recall: 0-5 (SM-2 algorithm)"
+        ..., ge=0, le=5, description="Calidad de recuerdo: 0-5 (algoritmo SM-2)"
     )
 
 
 class FlashcardProgressResponse(BaseModel):
-    """Schema for flashcard progress response."""
+    """Esquema para la respuesta de progreso de la flashcard."""
 
     id: UUID
     flashcard_id: UUID

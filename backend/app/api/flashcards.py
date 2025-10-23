@@ -23,7 +23,7 @@ async def get_flashcards_for_mind_map(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get all flashcards for a mind map."""
+    """Obtén todas las tarjetas para un mapa mental."""
     flashcard_service = FlashcardService()
     flashcards = await flashcard_service.get_flashcards_for_mind_map(
         db=db, mind_map_id=mind_map_id
@@ -39,7 +39,7 @@ async def review_flashcard(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Review a flashcard and update progress using SM-2 algorithm."""
+    """Revisar una tarjeta de estudio y actualizar el progreso utilizando el algoritmo SM-2."""
     flashcard_service = FlashcardService()
 
     try:
@@ -62,7 +62,7 @@ async def get_due_flashcards(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get flashcards due for review."""
+    """Obtener tarjetas de estudio pendientes de revisión."""
     flashcard_service = FlashcardService()
     due_flashcards = await flashcard_service.get_due_flashcards(
         db=db, user_id=current_user.id, mind_map_id=mind_map_id
@@ -77,7 +77,7 @@ async def get_flashcard_progress(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get progress for a specific flashcard."""
+    """Obtener progreso para una tarjeta de estudio específica."""
     flashcard_service = FlashcardService()
     progress = await flashcard_service.get_flashcard_progress(
         db=db, user_id=current_user.id, flashcard_id=flashcard_id

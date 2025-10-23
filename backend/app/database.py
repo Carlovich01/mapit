@@ -19,13 +19,13 @@ AsyncSessionLocal = async_sessionmaker(
 
 
 class Base(DeclarativeBase):
-    """Base class for all SQLAlchemy models."""
+    """Clase base para todos los modelos de SQLAlchemy."""
 
     pass
 
 
 async def get_db() -> AsyncSession:
-    """Dependency to get database session."""
+    """Dependencia para obtener la sesión de la base de datos."""
     async with AsyncSessionLocal() as session:
         try:
             yield session

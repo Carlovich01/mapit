@@ -8,7 +8,7 @@ import type {
 
 export const authService = {
   async login(email: string, password: string): Promise<AuthToken> {
-    // OAuth2 password flow expects form data
+    // El flujo de contraseñas de OAuth2 espera datos de formulario
     const formData = new FormData();
     formData.append("username", email);
     formData.append("password", password);

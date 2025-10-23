@@ -24,23 +24,23 @@ async def create_mind_map(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Upload PDF and create mind map."""
-    # Validate file type
+    """Sube PDF y crea un mapa mental."""
+    # Validar tipo de archivo
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Only PDF files are allowed"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Solo se permiten archivos PDF"
         )
 
-    # Read file content
+    # Leer el contenido del archivo
     pdf_bytes = await file.read()
 
     if len(pdf_bytes) > 10 * 1024 * 1024:  # 10MB limit
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail="File too large. Maximum size is 10MB",
+            detail="El archivo es demasiado grande. El tamaño máximo es 10MB",
         )
 
-    # Create mind map
+    # Crear un mapa mental
     try:
         mind_map_service = MindMapService()
         mind_map = await mind_map_service.create_mind_map_from_pdf(
@@ -51,20 +51,20 @@ async def create_mind_map(
             title=title,
         )
 
-        # Generate flashcards in background (async)
+        # Generar tarjetas de estudio en segundo plano (async)
         flashcard_service = FlashcardService()
         await flashcard_service.generate_flashcards_for_mind_map(
             db=db, mind_map_id=mind_map.id, pdf_bytes=pdf_bytes
         )
 
-        # Convert to response format
+        # Convertir al formato de respuesta
         return format_mind_map_response(mind_map)
 
     except ValueError as e:
-        # Handle PDF processing errors (e.g., no text extractable)
+        # Manejar errores de procesamiento de PDF (por ejemplo, sin texto extraíble)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
-        # Handle unexpected errors
+        # Manejar errores inesperados
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error procesando el PDF: {str(e)}",
@@ -78,7 +78,7 @@ async def list_mind_maps(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get all mind maps for current user."""
+    """Obtener todos los mapas mentales del usuario actual."""
     mind_map_service = MindMapService()
     mind_maps = await mind_map_service.get_user_mind_maps(
         db=db, user_id=current_user.id, skip=skip, limit=limit
@@ -93,7 +93,7 @@ async def get_mind_map(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get mind map details by ID."""
+    """Obtener detalles del mapa mental por ID."""
     mind_map_service = MindMapService()
     mind_map = await mind_map_service.get_mind_map_by_id(
         db=db, mind_map_id=mind_map_id, user_id=current_user.id
@@ -101,14 +101,14 @@ async def get_mind_map(
 
     if not mind_map:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Mind map not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Mapa mental no encontrado"
         )
 
     return format_mind_map_response(mind_map)
 
 
 def format_mind_map_response(mind_map) -> dict:
-    """Format mind map with nodes and edges for response."""
+    """Formatear mapa mental con nodos y bordes para la respuesta."""
     nodes = [
         {
             "id": node.node_id,

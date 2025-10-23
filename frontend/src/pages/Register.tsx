@@ -5,7 +5,7 @@ import { RegisterForm } from '../components/auth/RegisterForm';
 export function Register() {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
-  // Redirect to dashboard if already logged in
+  // Redirigir al panel de control si ya ha iniciado sesión
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }

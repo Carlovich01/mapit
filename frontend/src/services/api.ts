@@ -9,10 +9,10 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add JWT token and log requests
+// Interceptor de solicitudes para agregar tokens JWT y registrar solicitudes
 api.interceptors.request.use(
   (config) => {
-    // Add timestamp for duration calculation
+    // Agregar marca de tiempo para el cálculo de duración
     config.metadata = { startTime: new Date().getTime() };
 
     const token = storage.getToken();
@@ -20,7 +20,7 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Log the request
+    // Registrar la solicitud
     const method = config.method?.toUpperCase() || "GET";
     const url = config.url || "";
     logger.request(method, url, config.data);
@@ -33,14 +33,14 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor for error handling and logging
+// Interceptor de respuesta para el manejo y registro de errores
 api.interceptors.response.use(
   (response) => {
-    // Calculate duration
+    // Calcular duración
     const duration =
       new Date().getTime() - (response.config.metadata?.startTime || 0);
 
-    // Log successful response
+    // Registrar respuesta exitosa
     const method = response.config.method?.toUpperCase() || "GET";
     const url = response.config.url || "";
     const status = response.status;
@@ -50,20 +50,20 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Calculate duration
+    // Calcular duración
     const duration = error.config?.metadata?.startTime
       ? new Date().getTime() - error.config.metadata.startTime
       : undefined;
 
-    // Log the error
+    // Registrar el error
     const method = error.config?.method?.toUpperCase() || "UNKNOWN";
     const url = error.config?.url || "unknown";
 
     logger.httpError(method, url, error, duration);
 
-    // Handle 401 errors (unauthorized)
+    // Manejar errores 401 (no autorizados)
     if (error.response?.status === 401) {
-      // Token expired or invalid
+      // Token caducado o inválido
       storage.removeToken();
       logger.warning("Sesión expirada - Redirigiendo al login");
       window.location.href = "/login";
@@ -73,7 +73,7 @@ api.interceptors.response.use(
   }
 );
 
-// Extend axios config type to include metadata
+// Ampliar el tipo de configuración de axios para incluir metadatos
 declare module "axios" {
   export interface AxiosRequestConfig {
     metadata?: {

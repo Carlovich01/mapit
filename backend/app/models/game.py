@@ -7,7 +7,7 @@ from app.database import Base
 
 
 class GameSession(Base):
-    """Game session for mind map reordering game."""
+    """Sesión de juego para el juego de reordenamiento de mapas mentales."""
 
     __tablename__ = "game_sessions"
 

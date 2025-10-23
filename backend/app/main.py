@@ -5,20 +5,20 @@ from app.api import auth, mind_maps, flashcards, game
 from app.middleware import LoggingMiddleware
 from app.utils.logger import setup_logger, log_success
 
-# Setup logger
+# Configuracion del logger
 logger = setup_logger("mapit")
 
-# Create FastAPI app
+# Crear una aplicación FastAPI
 app = FastAPI(
     title="MapIT API",
     description="Transform PDFs into interactive learning tools with AI",
     version="1.0.0",
 )
 
-# Add logging middleware (first, so it logs everything)
+# Añadir middleware de logging (primero, para que registre todo)
 app.add_middleware(LoggingMiddleware)
 
-# Configure CORS
+# Configurar CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.FRONTEND_URL, "http://localhost:5173"],
@@ -27,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# Incluir routers
 app.include_router(auth.router, prefix="/api")
 app.include_router(mind_maps.router, prefix="/api")
 app.include_router(flashcards.router, prefix="/api")

@@ -1,6 +1,6 @@
 /**
- * SM-2 Algorithm for spaced repetition
- * Client-side implementation for preview/calculation
+ * Algoritmo SM-2 para repetición espaciada
+ * Implementación del lado del cliente para previsualización/cálculo
  */
 
 export interface SM2Result {
@@ -20,7 +20,7 @@ export function calculateSM2(
   let repetitions = currentRepetitions;
 
   if (quality >= 3) {
-    // Correct response
+    // Respuesta correcta
     if (repetitions === 0) {
       interval = 1;
     } else if (repetitions === 1) {
@@ -30,12 +30,12 @@ export function calculateSM2(
     }
     repetitions += 1;
   } else {
-    // Incorrect response - restart
+    // Respuesta incorrecta - reiniciar
     repetitions = 0;
     interval = 1;
   }
 
-  // Update easiness factor
+  // Actualizar el factor de facilidad
   ef = Math.max(
     1.3,
     ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))

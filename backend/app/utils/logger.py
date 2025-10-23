@@ -1,5 +1,5 @@
 """
-Colored logging utility for the application.
+Utilidad de logging de colores para la aplicación.
 """
 
 import logging
@@ -14,7 +14,7 @@ init(autoreset=True, strip=False)
 
 
 class ColoredFormatter(logging.Formatter):
-    """Custom formatter that adds colors to log messages."""
+    """Formateador personalizado que añade colores a los mensajes de log."""
 
     COLORS = {
         "DEBUG": Fore.CYAN,
@@ -25,39 +25,39 @@ class ColoredFormatter(logging.Formatter):
     }
 
     def format(self, record):
-        # Add color to the level name
+        # Añade color al nombre del nivel
         levelname = record.levelname
         if levelname in self.COLORS:
             record.levelname = f"{self.COLORS[levelname]}{levelname}{Style.RESET_ALL}"
 
-        # Format the message
+        # Formatear el mensaje
         result = super().format(record)
 
-        # Reset color at the end
+        # Restablecer color al final
         return result
 
 
 def setup_logger(name: str = "mapit") -> logging.Logger:
     """
-    Set up a logger with colored output.
+    Configurar un logger con salida en color.
 
     Args:
-        name: Logger name
+        name: Nombre del logger
 
     Returns:
-        Configured logger instance
+        Instancia de logger configurada
     """
     logger = logging.getLogger(name)
 
-    # Only add handler if not already configured
+    # Solo agregue el controlador si aún no está configurado
     if not logger.handlers:
         logger.setLevel(logging.INFO)
 
-        # Create console handler
+        # Crear controlador de consola
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(logging.INFO)
 
-        # Create formatter with colors
+        # Crear formateador con colores
         formatter = ColoredFormatter(
             "%(levelname)s:     %(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
         )
@@ -69,28 +69,28 @@ def setup_logger(name: str = "mapit") -> logging.Logger:
 
 
 def log_success(message: str, logger: logging.Logger = None):
-    """Log a success message in green."""
+    """Registrar un mensaje de éxito en verde."""
     if logger is None:
         logger = logging.getLogger("mapit")
     logger.info(f"{Fore.GREEN}✓ {message}{Style.RESET_ALL}")
 
 
 def log_error(message: str, logger: logging.Logger = None):
-    """Log an error message in red."""
+    """Registrar un mensaje de error en rojo."""
     if logger is None:
         logger = logging.getLogger("mapit")
     logger.error(f"{Fore.RED}✗ {message}{Style.RESET_ALL}")
 
 
 def log_warning(message: str, logger: logging.Logger = None):
-    """Log a warning message in yellow."""
+    """Registrar un mensaje de advertencia en amarillo."""
     if logger is None:
         logger = logging.getLogger("mapit")
     logger.warning(f"{Fore.YELLOW}⚠ {message}{Style.RESET_ALL}")
 
 
 def log_info(message: str, logger: logging.Logger = None):
-    """Log an info message in blue."""
+    """Registrar un mensaje de info en azul."""
     if logger is None:
         logger = logging.getLogger("mapit")
     logger.info(f"{Fore.CYAN}ℹ {message}{Style.RESET_ALL}")

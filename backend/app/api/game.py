@@ -19,7 +19,7 @@ async def create_game_session(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Create a new game session."""
+    """Crear una nueva sesión de juego."""
     game_service = GameService()
 
     try:
@@ -40,7 +40,7 @@ async def complete_game_session(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Complete a game session and submit answer."""
+    """Completar una sesión de juego y enviar respuesta."""
     game_service = GameService()
 
     try:
@@ -64,7 +64,7 @@ async def get_game_session(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get game session details."""
+    """Obtener detalles de la sesión de juego."""
     game_service = GameService()
     session = await game_service.get_game_session(
         db=db, session_id=session_id, user_id=current_user.id
@@ -72,7 +72,7 @@ async def get_game_session(
 
     if not session:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Game session not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Sesión de juego no encontrada"
         )
 
     return session
@@ -85,7 +85,7 @@ async def list_game_sessions(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get user's game sessions."""
+    """Obtener las sesiones de juego del usuario."""
     game_service = GameService()
     sessions = await game_service.get_user_game_sessions(
         db=db, user_id=current_user.id, mind_map_id=mind_map_id, limit=limit

@@ -1,6 +1,6 @@
 /**
- * Colored logging utility for the frontend.
- * Uses CSS styling to color console messages.
+ * Utilidad de registro de color para el frontend.
+ * Utiliza estilos CSS para colorear los mensajes de la consola.
  */
 
 interface LogStyles {
@@ -25,35 +25,35 @@ const symbols = {
 };
 
 /**
- * Log a success message in green.
+ * Registra un mensaje de éxito en verde.
  */
 export const logSuccess = (message: string, ...args: any[]) => {
   console.log(`%c${symbols.success} ${message}`, styles.success, ...args);
 };
 
 /**
- * Log an error message in red.
+ * Registra un mensaje de error en rojo.
  */
 export const logError = (message: string, ...args: any[]) => {
   console.error(`%c${symbols.error} ${message}`, styles.error, ...args);
 };
 
 /**
- * Log a warning message in yellow.
+ * Registra un mensaje de advertencia en amarillo.
  */
 export const logWarning = (message: string, ...args: any[]) => {
   console.warn(`%c${symbols.warning} ${message}`, styles.warning, ...args);
 };
 
 /**
- * Log an info message in blue.
+ * Registra un mensaje de información en azul.
  */
 export const logInfo = (message: string, ...args: any[]) => {
   console.info(`%c${symbols.info} ${message}`, styles.info, ...args);
 };
 
 /**
- * Log an HTTP request.
+ * Registra una solicitud HTTP.
  */
 export const logRequest = (method: string, url: string, data?: any) => {
   const timestamp = new Date().toLocaleTimeString();
@@ -65,7 +65,7 @@ export const logRequest = (method: string, url: string, data?: any) => {
 };
 
 /**
- * Log an HTTP response with appropriate color based on status.
+ * Registra una respuesta HTTP con el color apropiado según el estado.
  */
 export const logResponse = (
   method: string,
@@ -78,19 +78,19 @@ export const logResponse = (
   let symbol: string;
 
   if (status >= 200 && status < 300) {
-    // Success - Green
+    // Éxito - Verde
     style = styles.success;
     symbol = symbols.success;
   } else if (status >= 300 && status < 400) {
-    // Redirect - Info
+    // Redirección - Información
     style = styles.info;
     symbol = symbols.info;
   } else if (status >= 400 && status < 500) {
-    // Client error - Warning
+    // Error del cliente - Advertencia
     style = styles.warning;
     symbol = symbols.warning;
   } else {
-    // Server error - Error
+    // Error del servidor - Error
     style = styles.error;
     symbol = symbols.error;
   }
@@ -103,7 +103,7 @@ export const logResponse = (
 };
 
 /**
- * Log an HTTP error.
+ * Registrar un error HTTP.
  */
 export const logHttpError = (
   method: string,
@@ -128,7 +128,7 @@ export const logHttpError = (
 };
 
 /**
- * Create a logger instance for a specific module.
+ * Cree una instancia de registrador para un módulo específico.
  */
 export const createLogger = (moduleName: string) => ({
   success: (message: string, ...args: any[]) =>

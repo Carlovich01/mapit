@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application settings loaded from environment variables."""
+    """Configuraciones de la aplicación cargadas desde variables de entorno."""
 
     # Database
     DATABASE_URL: str

@@ -34,7 +34,7 @@ function MindMapGameViewerInner({
   const [nodes, setNodes, onNodesChangeInternal] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChangeInternal] = useEdgesState(initialEdges);
 
-  // Update nodes and edges when props change
+  // Actualizar nodos y bordes cuando cambian los accesorios
   useEffect(() => {
     setNodes(initialNodes);
   }, [initialNodes, setNodes]);
@@ -65,7 +65,7 @@ function MindMapGameViewerInner({
     (changes: any) => {
       onEdgesChangeInternal(changes);
       if (onEdgesChange) {
-        // Get updated edges after changes
+        // Obtener bordes actualizados después de los cambios
         setEdges((eds) => {
           onEdgesChange(eds);
           return eds;

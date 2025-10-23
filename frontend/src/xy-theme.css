@@ -1,14 +1,14 @@
-/* xyflow theme files. Delete these to start from our base */
+/* Archivos de tema de xyflow. Elimínalos para empezar desde nuestra base. */
 
 .react-flow {
   --xy-background-color: #f3f4f6;
-  /* Custom Variables */
+  /* Variables personalizadas */
   --xy-theme-selected: #2563eb;
   --xy-theme-hover: #3b82f6;
   --xy-theme-edge-hover: #1c4da3;
   --xy-theme-color-focus: #3b82f6;
 
-  /* Built-in Variables see https://reactflow.dev/learn/customization/theming */
+  /* Variables incorporadas ver https://reactflow.dev/learn/customization/theming */
   --xy-node-border-default: 1px solid #e5e7eb;
 
   --xy-node-boxshadow-default:
@@ -37,7 +37,7 @@
   --xy-edge-label-color-default: #f3f4f6;
 }
 
-/* Customizing Default Theming */
+/* Personalización de la temática predeterminada */
 
 .react-flow__node {
   box-shadow: var(--xy-node-boxshadow-default);
@@ -113,17 +113,15 @@
 }
 
 /* 
-  Custom Example CSS  - This CSS is to improve the example experience.
-  You can remove it if you want to use the default styles.
-
-  New Theme Classes:
-    .xy-theme__button   - Styles for buttons.
-    .xy-theme__input    - Styles for text inputs.
-    .xy-theme__checkbox - Styles for checkboxes.
-    .xy-theme__select   - Styles for dropdown selects.
-    .xy-theme__label    - Styles for labels.
-  
-  Use these classes to apply consistent theming across your components.
+CSS de ejemplo personalizado: Este CSS mejora la experiencia del ejemplo.
+Puede eliminarlo si desea usar los estilos predeterminados.
+Nuevas clases de tema:
+.xy-theme__button: estilos para botones.
+.xy-theme__input: estilos para entradas de texto.
+.xy-theme__checkbox: estilos para casillas de verificación.
+.xy-theme__select: estilos para menús desplegables.
+.xy-theme__label: estilos para etiquetas.
+Use estas clases para aplicar una temática consistente en todos sus componentes.
 */
 
 :root {
@@ -147,7 +145,7 @@
   }
 }
 
-/* Custom Button Styling */
+/* Estilo de botón personalizado */
 .xy-theme__button {
   display: inline-flex;
   align-items: center;
@@ -196,12 +194,12 @@
   margin-right: 0.2rem;
 }
 
-/* Add gap between adjacent buttons */
+/* Agregar espacio entre botones adyacentes */
 .xy-theme__button + .xy-theme__button {
   margin-left: 0.3rem;
 }
 
-/* Example Input Styling */
+/* Ejemplo de estilo de entrada */
 .xy-theme__input {
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-primary);
@@ -220,7 +218,7 @@
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
 }
 
-/* Specific Checkbox Styling */
+/* Estilo de casilla de verificación específico */
 .xy-theme__checkbox {
   appearance: none;
   -webkit-appearance: none;
@@ -248,7 +246,7 @@
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
 }
 
-/* Dropdown Styling */
+/* Estilo de menú desplegable */
 .xy-theme__select {
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-primary);

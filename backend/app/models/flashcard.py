@@ -16,7 +16,7 @@ from app.database import Base
 
 
 class Flashcard(Base):
-    """Flashcard generated from PDF content."""
+    """Tarjeta de estudio generada a partir de contenido PDF."""
 
     __tablename__ = "flashcards"
 
@@ -40,7 +40,7 @@ class Flashcard(Base):
 
 
 class FlashcardProgress(Base):
-    """User progress on flashcards using SM-2 algorithm."""
+    """Progreso del usuario en las tarjetas de estudio utilizando el algoritmo SM-2."""
 
     __tablename__ = "flashcard_progress"
     __table_args__ = (

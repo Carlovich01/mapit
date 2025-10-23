@@ -19,8 +19,8 @@ interface InternalNode {
   };
 }
 
-// this helper function returns the intersection point
-// of the line between the center of the intersectionNode and the target node
+// Esta función auxiliar devuelve el punto de intersección
+// de la línea entre el centro del nodo de intersección y el nodo de destino
 function getNodeIntersection(
   intersectionNode: InternalNode,
   targetNode: InternalNode
@@ -50,7 +50,7 @@ function getNodeIntersection(
   return { x, y };
 }
 
-// returns the position (top,right,bottom or right) passed node compared to the intersection point
+// devuelve la posición (superior, derecha, inferior o derecha) del nodo pasado en comparación con el punto de intersección
 function getEdgePosition(
   node: InternalNode,
   intersectionPoint: NodeIntersection
@@ -86,7 +86,7 @@ interface EdgeParams {
   targetPos: Position;
 }
 
-// returns the parameters (sx, sy, tx, ty, sourcePos, targetPos) you need to create an edge
+// devuelve los parámetros (sx, sy, tx, ty, sourcePos, targetPos) que necesita para crear un borde
 export function getEdgeParams(
   source: InternalNode,
   target: InternalNode

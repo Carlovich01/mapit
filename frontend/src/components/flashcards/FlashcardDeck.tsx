@@ -49,7 +49,7 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
     try {
       await onReview(currentCard.id, quality);
       
-      // Move to next card or complete
+      // Pasar a la siguiente tarjeta o completar
       if (currentIndex < flashcards.length - 1) {
         setCurrentIndex(currentIndex + 1);
       } else {

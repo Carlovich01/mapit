@@ -6,7 +6,7 @@ export interface User {
 }
 
 export interface LoginRequest {
-  username: string; // Email (OAuth2 uses username)
+  username: string; // Email (OAuth2 usa username)
   password: string;
 }
 

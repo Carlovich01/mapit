@@ -16,8 +16,8 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
     "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
 )
 async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
-    """Register a new user."""
-    # Check if user already exists
+    """Registrar un nuevo usuario."""
+    # Compruebe si el usuario ya existe
     existing_user = await AuthService.get_user_by_email(db, user_data.email)
     if existing_user:
         raise HTTPException(
@@ -32,7 +32,7 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)
 ):
-    """Login and get access token."""
+    """Iniciar sesión y obtener token de acceso."""
     user = await AuthService.authenticate_user(
         db, form_data.username, form_data.password
     )
@@ -53,5 +53,5 @@ async def login(
 async def get_current_user_info(
     current_user: User = Depends(get_current_user),
 ):
-    """Get current user information."""
+    """Obtener información del usuario actual."""
     return current_user

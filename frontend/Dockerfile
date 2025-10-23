@@ -2,18 +2,18 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Copy package files
+# Copiar archivos de paquetes
 COPY package*.json ./
 
-# Install dependencies
+# Instalar dependencias
 RUN npm install
 
-# Copy application code
+# Copiar el código de la aplicación
 COPY . .
 
-# Expose port
+# Exponer puerto
 EXPOSE 5173
 
-# Run development server
+# Ejecutar el servidor de desarrollo
 CMD ["npm", "run", "dev", "--", "--host"]
 

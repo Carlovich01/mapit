@@ -7,7 +7,7 @@ import LogoMapit from '../assets/LogoMapit.svg';
 export function Home() {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
-  // Redirect to dashboard if already logged in
+  // Redirigir al panel de control si ya ha iniciado sesión
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
