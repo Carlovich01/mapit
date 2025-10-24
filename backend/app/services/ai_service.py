@@ -169,7 +169,7 @@ Responde SOLO con el array JSON:"""
 
             response_text = response.text.strip()
 
-            # Remove markdown code blocks
+            # Eliminar bloques de código de rebajas
             if response_text.startswith("```"):
                 lines = response_text.split("\n")
                 response_text = (
@@ -181,14 +181,14 @@ Responde SOLO con el array JSON:"""
 
             flashcards = json.loads(response_text)
 
-            # Validate structure
+            # Validar estructura
             if not isinstance(flashcards, list):
                 raise ValueError("Formato de flashcards no válido")
 
             return flashcards
 
         except Exception as e:
-            # Fallback: create a simple flashcard
+            # Respaldo: crear una tarjeta didáctica sencilla
             return [
                 {
                     "question": "¿Cuál es el tema principal del documento?",

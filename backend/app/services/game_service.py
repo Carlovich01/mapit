@@ -52,7 +52,7 @@ class GameService:
         Returns:
             Sesión de juego actualizada con puntuación
         """
-        # Get game session
+        # Obtener sesión de juego
         result = await db.execute(
             select(GameSession).where(
                 GameSession.id == session_id, GameSession.user_id == user_id
@@ -66,7 +66,7 @@ class GameService:
         if game_session.completed:
             raise ValueError("Sesión de juego ya completada")
 
-        # Get original edges from mind map
+        # Obtenga edges originales del mapa mental
         result = await db.execute(
             select(MindMapEdge).where(
                 MindMapEdge.mind_map_id == game_session.mind_map_id
@@ -74,16 +74,16 @@ class GameService:
         )
         original_edges = list(result.scalars().all())
 
-        # Convert to dict format for comparison
+        # Convertir al formato dict para comparar
         original_edges_dict = [
             {"source": edge.source_node_id, "target": edge.target_node_id}
             for edge in original_edges
         ]
 
-        # Calculate score using graph validator
+        # Calcular score usando graph validator
         score = GraphValidator.calculate_score(original_edges_dict, submitted_edges)
 
-        # Update game session
+        # Actualizar sesión de juego
         game_session.score = score
         game_session.completed = True
         game_session.time_elapsed_seconds = time_elapsed_seconds

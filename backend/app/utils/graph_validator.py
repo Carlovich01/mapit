@@ -35,10 +35,10 @@ class GraphValidator:
         original_set = GraphValidator.edges_to_set(original_edges)
         submitted_set = GraphValidator.edges_to_set(submitted_edges)
 
-        # Count correct edges
+        # Contar los edges correctos
         correct_edges = original_set & submitted_set
 
-        # Calculate score
+        # Calcular score
         score = int((len(correct_edges) / len(original_set)) * 100)
 
         return score

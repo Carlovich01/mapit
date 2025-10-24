@@ -19,7 +19,7 @@ class GameSessionCreate(BaseModel):
 class GameSessionUpdate(BaseModel):
     """Esquema para actualizar/completar una sesión de juego."""
 
-    edges: list[EdgeSubmission] = Field(..., description="User's submitted edges")
+    edges: list[EdgeSubmission] = Field(..., description="Edges enviados por el usuario")
     time_elapsed_seconds: int = Field(..., ge=0)
 
 
