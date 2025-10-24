@@ -5,7 +5,6 @@ import {
   addEdge,
   Background,
   Controls,
-  MiniMap,
   useNodesState,
   useEdgesState,
   type Connection,

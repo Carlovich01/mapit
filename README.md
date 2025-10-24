@@ -99,6 +99,69 @@ mapit/
    cd mapit
    ```
 
+2. **Crear archivo `.env`** en la raíz del proyecto:
+   ```env
+   GEMINI_API_KEY=tu_api_key_aqui
+   ```
+
+### Despliegue
+
+#### 🔧 Modo Desarrollo (con hot-reload)
+
+Para desarrollo activo con recarga automática:
+
+```bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+**Características:**
+- ⚡ Hot-reload en backend y frontend
+- 🔄 Cambios de código se reflejan automáticamente
+- 📝 Volúmenes montados para edición en tiempo real
+
+**URLs:**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- Adminer (DB): http://localhost:8080
+
+#### 🚀 Modo Producción Local (optimizado)
+
+Para pruebas en un entorno similar a producción:
+
+```bash
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+**Características:**
+- ✅ Frontend compilado con `npm run build`
+- ✅ Archivos estáticos servidos por Nginx
+- ✅ Backend con `fastapi run` (sin reload)
+- ✅ Compresión gzip y cache de assets
+- ✅ Mejor rendimiento y menor uso de recursos
+
+**URLs:**
+- Aplicación completa: http://localhost:8080
+- Backend API: http://localhost:8000
+
+### Comandos Útiles
+
+```bash
+# Detener servicios
+docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.prod.yml down
+
+# Ver logs en tiempo real
+docker-compose -f docker-compose.dev.yml logs -f
+docker-compose -f docker-compose.prod.yml logs -f backend
+
+# Reconstruir un servicio específico
+docker-compose -f docker-compose.dev.yml up --build backend
+docker-compose -f docker-compose.prod.yml up --build frontend
+
+# Eliminar volúmenes (resetear base de datos)
+docker-compose -f docker-compose.dev.yml down -v
+```
+
 2. **Configurar variables de entorno**
    
    Crear archivo `.env` en la raíz:

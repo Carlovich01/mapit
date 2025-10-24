@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mapit_user
+      POSTGRES_PASSWORD: mapit_password
+      POSTGRES_DB: mapit_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mapit_user -d mapit_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mapit-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://mapit_user:mapit_password@db:5432/mapit_db
+      SECRET_KEY: dev-secret-key-change-in-production
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      FRONTEND_URL: http://localhost:8080
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - mapit-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - mapit-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  mapit-network:
+    driver: bridge
