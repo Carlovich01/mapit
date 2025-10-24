@@ -23,7 +23,9 @@ export function FlashcardItem({
   const [showAnswer, setShowAnswer] = useState(false);
   const [mode, setMode] = useState<"manual" | "written">("manual");
   const [userAnswer, setUserAnswer] = useState("");
-  const [aiEvaluation, setAiEvaluation] = useState<AIEvaluationResponse | null>(null);
+  const [aiEvaluation, setAiEvaluation] = useState<AIEvaluationResponse | null>(
+    null
+  );
   const [isEvaluating, setIsEvaluating] = useState(false);
 
   const qualityOptions = [
@@ -185,8 +187,9 @@ export function FlashcardItem({
                 <div className="flex items-center gap-2 mb-2">
                   <div
                     className={`w-4 h-4 rounded-full ${
-                      qualityOptions.find((q) => q.value === aiEvaluation.quality)
-                        ?.color || "bg-gray-500"
+                      qualityOptions.find(
+                        (q) => q.value === aiEvaluation.quality
+                      )?.color || "bg-gray-500"
                     }`}
                   />
                   <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">
@@ -238,7 +241,9 @@ export function FlashcardItem({
                         disabled={disabled}
                       >
                         <div className="flex flex-col items-center gap-1">
-                          <div className={`w-3 h-3 rounded-full ${option.color}`} />
+                          <div
+                            className={`w-3 h-3 rounded-full ${option.color}`}
+                          />
                           <span className="text-xs">{option.label}</span>
                         </div>
                       </Button>
