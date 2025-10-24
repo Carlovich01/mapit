@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import type { Flashcard } from '../../types/flashcard';
-import { FlashcardItem } from './FlashcardItem';
-import { Button } from '../ui/button';
-import { Card, CardContent } from '../ui/card';
+import {useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import type { Flashcard } from "../../types/flashcard";
+import { FlashcardItem } from "./FlashcardItem";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
 
 interface FlashcardDeckProps {
   flashcards: Flashcard[];
@@ -13,6 +14,7 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [reviewing, setReviewing] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const navigate = useNavigate();
 
   if (flashcards.length === 0) {
     return (
@@ -34,8 +36,8 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
           <p className="text-muted-foreground">
             Has completado todas las flashcards de esta sesión.
           </p>
-          <Button onClick={() => { setCompleted(false); setCurrentIndex(0); }}>
-            Revisar de nuevo
+          <Button onClick={() => navigate("/dashboard")} className="mt-4">
+            Volver al Dashboard
           </Button>
         </CardContent>
       </Card>
@@ -48,7 +50,7 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
     setReviewing(true);
     try {
       await onReview(currentCard.id, quality);
-      
+
       // Pasar a la siguiente tarjeta o completar
       if (currentIndex < flashcards.length - 1) {
         setCurrentIndex(currentIndex + 1);
@@ -56,7 +58,7 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
         setCompleted(true);
       }
     } catch (error) {
-      console.error('Error reviewing flashcard:', error);
+      console.error("Error al revisar la flashcard:", error);
     } finally {
       setReviewing(false);
     }
@@ -73,4 +75,3 @@ export function FlashcardDeck({ flashcards, onReview }: FlashcardDeckProps) {
     />
   );
 }
-

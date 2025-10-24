@@ -10,13 +10,12 @@ export function FlashcardsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { mindMap, loading: mindMapLoading } = useMindMap(id);
-  const { dueFlashcards, loading, error, reload } = useDueFlashcards(id);
+  const { dueFlashcards, loading, error } = useDueFlashcards(id);
 
   const handleReview = async (flashcardId: string, quality: number) => {
     const { flashcardService } = await import('../services/flashcardService');
     await flashcardService.reviewFlashcard(flashcardId, quality);
-    // Recargar las flashcards vencidas después de cada revisión
-    await reload();
+    // NO recargar aquí - dejar que FlashcardDeck maneje la navegación
   };
 
   if (mindMapLoading || loading) {
