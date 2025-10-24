@@ -9,20 +9,20 @@ from app.utils.graph_validator import GraphValidator
 
 
 class GameService:
-    """Service for game session operations."""
+    """Servicio para operaciones de sesiones de juego."""
 
     async def create_game_session(
         self, db: AsyncSession, user_id: UUID, mind_map_id: UUID
     ) -> GameSession:
-        """Create a new game session."""
-        # Verify mind map exists and belongs to user
+        """Crear una nueva sesión de juego."""
+        # Verificar que el mapa mental existe y pertenece al usuario
         result = await db.execute(
             select(MindMap).where(MindMap.id == mind_map_id, MindMap.user_id == user_id)
         )
         mind_map = result.scalar_one_or_none()
 
         if not mind_map:
-            raise ValueError("Mind map not found or access denied")
+            raise ValueError("Mapa mental no encontrado o acceso denegado")
 
         game_session = GameSession(user_id=user_id, mind_map_id=mind_map_id)
 
@@ -41,16 +41,16 @@ class GameService:
         time_elapsed_seconds: int,
     ) -> GameSession:
         """
-        Complete a game session and calculate score.
+        Completar una sesión de juego y calcular la puntuación.
 
         Args:
-            session_id: Game session ID
-            user_id: User ID
-            submitted_edges: List of edges submitted by user
-            time_elapsed_seconds: Time taken to complete
+            session_id: ID de la sesión de juego
+            user_id: ID de usuario
+            submitted_edges: Lista de aristas enviadas por el usuario
+            time_elapsed_seconds: Tiempo empleado en completar
 
         Returns:
-            Updated GameSession with score
+            Sesión de juego actualizada con puntuación
         """
         # Get game session
         result = await db.execute(
@@ -61,10 +61,10 @@ class GameService:
         game_session = result.scalar_one_or_none()
 
         if not game_session:
-            raise ValueError("Game session not found")
+            raise ValueError("Sesión de juego no encontrada")
 
         if game_session.completed:
-            raise ValueError("Game session already completed")
+            raise ValueError("Sesión de juego ya completada")
 
         # Get original edges from mind map
         result = await db.execute(
@@ -97,7 +97,7 @@ class GameService:
     async def get_game_session(
         self, db: AsyncSession, session_id: UUID, user_id: UUID
     ) -> GameSession | None:
-        """Get game session by ID."""
+        """Obtener sesión de juego por ID."""
         result = await db.execute(
             select(GameSession).where(
                 GameSession.id == session_id, GameSession.user_id == user_id
@@ -112,7 +112,7 @@ class GameService:
         mind_map_id: UUID | None = None,
         limit: int = 50,
     ) -> list[GameSession]:
-        """Get user's game sessions."""
+        """Obtener sesiones de juego del usuario."""
         query = (
             select(GameSession)
             .where(GameSession.user_id == user_id)

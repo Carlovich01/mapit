@@ -4,18 +4,18 @@ from io import BytesIO
 
 
 class PDFService:
-    """Service for PDF processing (in-memory only)."""
+    """Servicio para procesamiento de PDF (solo en memoria)"""
 
     @staticmethod
     async def extract_text_from_pdf(pdf_bytes: bytes) -> str:
         """
-        Extract text from PDF bytes (in-memory processing).
+        Extraer texto de bytes PDF (procesamiento en memoria).
 
         Args:
-            pdf_bytes: PDF file content as bytes
+            pdf_bytes: Contenido del archivo PDF en bytes
 
         Returns:
-            Extracted text from all pages
+            Texto extraído de todas las páginas
         """
         text_content = []
 
@@ -32,19 +32,19 @@ class PDFService:
 
     @staticmethod
     def calculate_content_hash(content: bytes) -> str:
-        """Calculate SHA-256 hash of content."""
+        """Calcular el hash SHA-256 del contenido."""
         return hashlib.sha256(content).hexdigest()
 
     @staticmethod
     async def process_pdf(pdf_bytes: bytes) -> tuple[str, str]:
         """
-        Process PDF: extract text and calculate hash.
+        Process PDF: Extraer texto y calcular hash.
 
         Returns:
-            Tuple of (extracted_text, content_hash)
+            Tuple de (extracted_text, content_hash)
 
         Raises:
-            ValueError: If PDF contains insufficient text
+            ValueError: Si el PDF no contiene suficiente texto
         """
         text = await PDFService.extract_text_from_pdf(pdf_bytes)
         content_hash = PDFService.calculate_content_hash(pdf_bytes)

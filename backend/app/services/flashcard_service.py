@@ -10,7 +10,7 @@ from app.services.pdf_service import PDFService
 
 
 class FlashcardService:
-    """Service for flashcard operations and SM-2 algorithm."""
+    """Servicio para operaciones con flashcards y algoritmo SM-2."""
 
     def __init__(self):
         self.ai_service = AIService()
@@ -23,9 +23,9 @@ class FlashcardService:
         num_cards: int = 10,
     ) -> list[Flashcard]:
         """
-        Generate flashcards for a mind map.
+        Generar flashcards para un mapa mental.
 
-        If pdf_bytes not provided, will use existing flashcards or fail.
+        Si no se proporciona pdf_bytes, se utilizarán las flashcards existentes o fallará.
         """
         # Check if flashcards already exist
         result = await db.execute(
@@ -65,7 +65,7 @@ class FlashcardService:
     async def get_flashcards_for_mind_map(
         self, db: AsyncSession, mind_map_id: UUID
     ) -> list[Flashcard]:
-        """Get all flashcards for a mind map."""
+        """Obtener todas las flashcards para un mapa mental."""
         result = await db.execute(
             select(Flashcard)
             .where(Flashcard.mind_map_id == mind_map_id)
@@ -76,7 +76,7 @@ class FlashcardService:
     async def get_flashcard_progress(
         self, db: AsyncSession, user_id: UUID, flashcard_id: UUID
     ) -> FlashcardProgress:
-        """Get or create flashcard progress for a user."""
+        """Obtener o crear el progreso de la flashcard para un usuario."""
         result = await db.execute(
             select(FlashcardProgress)
             .where(
@@ -115,16 +115,16 @@ class FlashcardService:
         self, db: AsyncSession, user_id: UUID, flashcard_id: UUID, quality: int
     ) -> FlashcardProgress:
         """
-        Update flashcard progress using SM-2 algorithm.
+        Actualizar el progreso de la flashcard usando el algoritmo SM-2.
 
         Args:
-            quality: 0-5 (0=complete blackout, 5=perfect response)
+            Calidad: 0-5 (0=apagón total, 5=respuesta perfecta)
         """
         progress = await self.get_flashcard_progress(db, user_id, flashcard_id)
 
-        # SM-2 Algorithm
+        # Algoritmo SM-2
         if quality >= 3:
-            # Correct response
+            # Respuesta correcta
             if progress.repetitions == 0:
                 progress.interval = 1
             elif progress.repetitions == 1:
@@ -134,18 +134,18 @@ class FlashcardService:
 
             progress.repetitions += 1
         else:
-            # Incorrect response - restart
+            # Respuesta incorrecta - reiniciar
             progress.repetitions = 0
             progress.interval = 1
 
-        # Update easiness factor
+        # Actualizar el factor de facilidad
         progress.easiness_factor = max(
             1.3,
             progress.easiness_factor
             + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)),
         )
 
-        # Set next review date
+        # Establecer la próxima fecha de revisión
         progress.next_review_date = date.today() + timedelta(days=progress.interval)
         progress.last_reviewed_at = datetime.utcnow()
 
@@ -157,8 +157,8 @@ class FlashcardService:
     async def get_due_flashcards(
         self, db: AsyncSession, user_id: UUID, mind_map_id: UUID | None = None
     ) -> list[FlashcardProgress]:
-        """Get flashcards due for review, including never-reviewed flashcards."""
-        # Get flashcards that are due for review
+        """Obtener flashcards pendientes de revisión, incluidas las nunca revisadas."""
+        # Obtenga tarjetas didácticas que deben revisarse
         query = (
             select(FlashcardProgress)
             .where(
@@ -174,14 +174,14 @@ class FlashcardService:
         result = await db.execute(query)
         due_flashcards = list(result.scalars().all())
 
-        # Get all flashcards for the mind map(s)
+        # Obtenga todas las flashcards para los mapas mentales
         flashcard_query = select(Flashcard)
         if mind_map_id:
             flashcard_query = flashcard_query.where(
                 Flashcard.mind_map_id == mind_map_id
             )
         else:
-            # Get all flashcards for user's mind maps
+            # Obtener todas las flashcards para los mapas mentales del usuario
             flashcard_query = flashcard_query.join(MindMap).where(
                 MindMap.user_id == user_id
             )
@@ -189,8 +189,8 @@ class FlashcardService:
         flashcard_result = await db.execute(flashcard_query)
         all_flashcards = list(flashcard_result.scalars().all())
 
-        # Get ALL existing progress for these flashcards (not just due ones)
-        # to avoid duplicate creation
+        # Obtener TODO el progreso existente para estas tarjetas didácticas (no solo las vencidas)
+        # para evitar la creación duplicada
         all_progress_query = select(FlashcardProgress).where(
             FlashcardProgress.user_id == user_id
         )
@@ -208,16 +208,16 @@ class FlashcardService:
         all_progress_result = await db.execute(all_progress_query)
         all_existing_progress = list(all_progress_result.scalars().all())
 
-        # Get flashcard IDs that already have ANY progress (due or not)
+        # Obtenga los ID de las flashcards que ya tienen CUALQUIER progreso (debido o no)
         reviewed_flashcard_ids = {
             progress.flashcard_id for progress in all_existing_progress
         }
 
-        # Create and save progress entries for never-reviewed flashcards
+        # Crear y guardar entradas de progreso para flashcards nunca revisadas
         new_progress_list = []
         for flashcard in all_flashcards:
             if flashcard.id not in reviewed_flashcard_ids:
-                # Create initial progress for this flashcard
+                # Crear progreso inicial para esta flashcard
                 progress = FlashcardProgress(
                     user_id=user_id,
                     flashcard_id=flashcard.id,
@@ -229,15 +229,15 @@ class FlashcardService:
                 db.add(progress)
                 new_progress_list.append(progress)
 
-        # Commit all new progress records at once
+        # Confirmar todos los nuevos registros de progreso a la vez
         if new_progress_list:
             await db.commit()
 
-            # Reload with flashcard relationships
+            # Recargar con relaciones de tarjetas didácticas
             for progress in new_progress_list:
                 await db.refresh(progress)
 
-            # Load flashcard relationship
+            # Cargar relación de tarjetas didácticas
             new_progress_ids = [p.id for p in new_progress_list]
             reload_query = (
                 select(FlashcardProgress)

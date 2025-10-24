@@ -75,6 +75,8 @@ function MindMapGameViewerInner({
     [onEdgesChangeInternal, onEdgesChange, setEdges]
   );
 
+  const proOptions = { hideAttribution: true };
+
   return (
     <div className="floating-edges game-mode w-full h-full">
       <ReactFlow
@@ -94,6 +96,7 @@ function MindMapGameViewerInner({
         connectionRadius={360}
         connectOnClick={true}
         fitView
+        proOptions={proOptions}
       >
         <Background />
         <Controls showInteractive={false} />
@@ -102,7 +105,7 @@ function MindMapGameViewerInner({
           zoomable
           pannable
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
           }}
         />
       </ReactFlow>

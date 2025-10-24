@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class UserCreate(BaseModel):
-    """Schema for user registration."""
+    """Esquema para el registro de usuarios."""
 
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=100)
@@ -12,7 +12,7 @@ class UserCreate(BaseModel):
 
 
 class UserResponse(BaseModel):
-    """Schema for user response."""
+    """Esquema para la respuesta de usuario."""
 
     id: UUID
     email: str
@@ -23,13 +23,13 @@ class UserResponse(BaseModel):
 
 
 class Token(BaseModel):
-    """Schema for JWT token response."""
+    """Esquema para la respuesta del token JWT."""
 
     access_token: str
     token_type: str = "bearer"
 
 
 class TokenData(BaseModel):
-    """Schema for JWT token payload."""
+    """Esquema para el payload del token JWT."""
 
     user_id: str | None = None

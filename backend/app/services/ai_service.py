@@ -6,11 +6,11 @@ from app.config import settings
 
 
 class AIService:
-    """Service for AI operations using Gemini Flash Latest."""
+    """Servicio para operaciones de IA utilizando Gemini Flash Latest."""
 
     def __init__(self):
-        """Initialize AI service with Gemini client."""
-        # Set API key as environment variable (required by google-genai SDK)
+        """Inicializar el servicio de IA con el cliente de Gemini."""
+        # Establecer la clave API como variable de entorno (requerida por el SDK de google-genai)
         os.environ["GOOGLE_API_KEY"] = settings.GEMINI_API_KEY
 
         self.client = genai.Client()
@@ -20,14 +20,14 @@ class AIService:
         self, text: str, title: str | None = None
     ) -> dict:
         """
-        Generate mind map structure from text using Gemini.
+        Genere la estructura de un mapa mental a partir del texto usando Gemini.
 
         Args:
-            text: Extracted text from PDF
-            title: Optional title for the mind map
+            text: Texto extraído de PDF
+            title: Título opcional para el mapa mental
 
         Returns:
-            Dict with structure: {
+            Dict con la estructura: {
                 "title": str,
                 "nodes": [{"id": str, "label": str, "content": str, "level": int}],
                 "edges": [{"id": str, "source": str, "target": str}]
@@ -70,10 +70,10 @@ Responde SOLO con el JSON (sin markdown, sin explicaciones):"""
                 config=GenerateContentConfig(response_modalities=["TEXT"]),
             )
 
-            # Extract JSON from response
+            # Extraer JSON de la respuesta
             response_text = response.text.strip()
 
-            # Remove markdown code blocks if present
+            # Eliminar bloques de código de rebajas si están presentes
             if response_text.startswith("```"):
                 lines = response_text.split("\n")
                 response_text = (
@@ -85,25 +85,25 @@ Responde SOLO con el JSON (sin markdown, sin explicaciones):"""
 
             structure = json.loads(response_text)
 
-            # Validate structure
+            # Validar estructura
             if "nodes" not in structure or "edges" not in structure:
-                raise ValueError("Invalid structure from AI: missing nodes or edges")
+                raise ValueError("Estructura no válida de la IA: nodos o bordes faltantes")
 
-            # Validate minimum nodes
+            # Validar nodos mínimos
             if len(structure["nodes"]) < 2:
                 raise ValueError(
-                    f"AI generated insufficient nodes: only {len(structure['nodes'])} node(s)"
+                    f"La IA generó un número insuficiente de nodos: solo {len(structure['nodes'])} nodo(s)"
                 )
 
-            # Use provided title or AI-generated title
+            # Utilice el título proporcionado o el título generado por IA
             if title:
                 structure["title"] = title
 
             return structure
 
         except json.JSONDecodeError as e:
-            # Log the error for debugging
-            print(f"JSON decode error: {str(e)}")
+            # Registrar el error para depurarlo
+            print(f"Error de decodificación de JSON: {str(e)}")
             print(
                 f"Response text: {response_text if 'response_text' in locals() else 'N/A'}"
             )
@@ -112,30 +112,30 @@ Responde SOLO con el JSON (sin markdown, sin explicaciones):"""
                 "Por favor, intenta con un PDF diferente o con más contenido."
             )
         except ValueError as e:
-            # Re-raise validation errors
+            # Volver a generar errores de validación
             print(f"Validation error: {str(e)}")
             raise ValueError(
                 f"Error al generar el mapa mental: {str(e)}. "
                 "El PDF puede ser muy corto o el contenido no es adecuado para generar un mapa mental."
             )
         except Exception as e:
-            # Log the error for debugging
-            print(f"Unexpected error generating mind map: {str(e)}")
+            # Registrar el error para depurarlo
+            print(f"Error inesperado al generar el mapa mental: {str(e)}")
             print(
-                f"Response text (if available): {response_text if 'response_text' in locals() else 'N/A'}"
+                f"Texto de respuesta (si está disponible): {response_text if 'response_text' in locals() else 'N/A'}"
             )
-            raise ValueError("Error inesperado al procesar el PDF con IA. ")
+            raise ValueError(f"Error inesperado al procesar el PDF con IA: {str(e)}")
 
     async def generate_flashcards(self, text: str, num_cards: int = 10) -> list[dict]:
         """
-        Generate flashcards from text using Gemini.
+        Genera tarjetas didácticas a partir de texto usando Gemini.
 
         Args:
-            text: Source text
-            num_cards: Number of flashcards to generate
+            text: Texto fuente
+            num_cards: Número de tarjetas didácticas a generar
 
         Returns:
-            List of dicts: [{"question": str, "answer": str}]
+            Lista de dicts: [{"question": str, "answer": str}]
         """
         prompt = f"""Genera {num_cards} flashcards educativas del siguiente texto.
 
@@ -183,7 +183,7 @@ Responde SOLO con el array JSON:"""
 
             # Validate structure
             if not isinstance(flashcards, list):
-                raise ValueError("Invalid flashcards format")
+                raise ValueError("Formato de flashcards no válido")
 
             return flashcards
 

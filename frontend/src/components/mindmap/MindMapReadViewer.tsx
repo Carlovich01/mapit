@@ -143,6 +143,8 @@ function MindMapReadViewerInner({
     [onNodeClick]
   );
 
+  const proOptions = { hideAttribution: true };
+
   return (
     <div className="floating-edges w-full h-full">
       <ReactFlow
@@ -158,15 +160,16 @@ function MindMapReadViewerInner({
         minZoom={0.1}
         maxZoom={4}
         fitView
+        proOptions={proOptions}
       >
-        <Background />
+        <Background/>
         <Controls showInteractive={false} />
         <MiniMap 
           nodeStrokeWidth={3}
           zoomable
           pannable
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
           }}
         />
       </ReactFlow>

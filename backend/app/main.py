@@ -11,7 +11,7 @@ logger = setup_logger("mapit")
 # Crear una aplicación FastAPI
 app = FastAPI(
     title="MapIT API",
-    description="Transform PDFs into interactive learning tools with AI",
+    description="Transforme archivos PDF en herramientas de aprendizaje interactivas con IA",
     version="1.0.0",
 )
 
@@ -36,18 +36,18 @@ app.include_router(game.router, prefix="/api")
 
 @app.get("/")
 async def root():
-    """Root endpoint."""
+    """Endpoint raiz."""
     return {"message": "MapIT API", "version": "1.0.0", "docs": "/docs"}
 
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
+    """Endpoint de verificación de estado."""
     return {"status": "healthy"}
 
 
 @app.on_event("startup")
 async def startup_event():
-    """Log startup message."""
+    """Mensaje de inicio del registro"""
     log_success("MapIT API iniciada correctamente - Servidor corriendo")
     logger.info(f"Documentación disponible en: http://localhost:8000/docs")

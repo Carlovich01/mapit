@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class NodeSchema(BaseModel):
-    """Schema for a mind map node."""
+    """Esquema para un nodo de mapa mental."""
 
     id: str = Field(..., description="Unique node identifier for React Flow")
     label: str = Field(..., description="Node label/title")
@@ -16,7 +16,7 @@ class NodeSchema(BaseModel):
 
 
 class EdgeSchema(BaseModel):
-    """Schema for a mind map edge."""
+    """Esquema para una conexión en un mapa mental."""
 
     id: str = Field(..., description="Unique edge identifier")
     source: str = Field(..., description="Source node ID")
@@ -27,14 +27,14 @@ class EdgeSchema(BaseModel):
 
 
 class MindMapCreate(BaseModel):
-    """Schema for creating a mind map (PDF upload)."""
+    """Esquema para crear un mapa mental (subida de PDF)."""
 
-    # File will be handled in the endpoint via UploadFile
+    # El archivo será manejado en el endpoint a través de UploadFile
     title: str | None = None
 
 
 class MindMapResponse(BaseModel):
-    """Schema for mind map response with full details."""
+    """Esquema para la respuesta de un mapa mental con todos los detalles."""
 
     id: UUID
     title: str
@@ -48,7 +48,7 @@ class MindMapResponse(BaseModel):
 
 
 class MindMapListResponse(BaseModel):
-    """Schema for mind map list item (without nodes/edges)."""
+    """Esquema para un elemento de lista de mapas mentales (sin nodos/conexiones)."""
 
     id: UUID
     title: str

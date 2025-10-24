@@ -15,7 +15,7 @@ from app.database import Base
 
 
 class MindMap(Base):
-    """Mind map generated from PDF."""
+    """Mapa mental generado a partir de PDF."""
 
     __tablename__ = "mind_maps"
 
@@ -50,7 +50,7 @@ class MindMap(Base):
 
 
 class MindMapNode(Base):
-    """Node in a mind map (graph structure)."""
+    """Nodo en un mapa mental (estructura de grafo)."""
 
     __tablename__ = "mind_map_nodes"
     __table_args__ = (
@@ -78,7 +78,7 @@ class MindMapNode(Base):
 
 
 class MindMapEdge(Base):
-    """Edge connecting nodes in a mind map."""
+    """Conexión entre nodos en un mapa mental."""
 
     __tablename__ = "mind_map_edges"
     __table_args__ = (

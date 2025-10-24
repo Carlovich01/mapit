@@ -8,7 +8,7 @@ from app.services.ai_service import AIService
 
 
 class MindMapService:
-    """Service for mind map operations."""
+    """Servicio para operaciones de mapas mentales."""
 
     def __init__(self):
         self.pdf_service = PDFService()
@@ -23,17 +23,17 @@ class MindMapService:
         title: str | None = None,
     ) -> MindMap:
         """
-        Create mind map from PDF.
+        Crear mapa mental a partir de PDF.
 
         Args:
-            db: Database session
-            user_id: User ID
-            pdf_bytes: PDF file content
-            filename: Original filename
-            title: Optional custom title
+            db: Sesión de base de datos
+            user_id: ID de usuario
+            pdf_bytes: Contenido del archivo PDF
+            filename: Nombre del archivo original
+            title: Título personalizado opcional
 
         Returns:
-            Created MindMap with nodes and edges
+            Crear un mapa mental con nodos y aristas
         """
         # Extract text and calculate hash
         text, content_hash = await self.pdf_service.process_pdf(pdf_bytes)
@@ -93,7 +93,7 @@ class MindMapService:
     async def get_mind_map_by_id(
         self, db: AsyncSession, mind_map_id: UUID, user_id: UUID
     ) -> MindMap | None:
-        """Get mind map by ID with authorization check."""
+        """Obtener mapa mental por ID con verificación de autorización."""
         result = await db.execute(
             select(MindMap)
             .where(MindMap.id == mind_map_id, MindMap.user_id == user_id)
@@ -104,7 +104,7 @@ class MindMapService:
     async def get_user_mind_maps(
         self, db: AsyncSession, user_id: UUID, skip: int = 0, limit: int = 100
     ) -> list[MindMap]:
-        """Get all mind maps for a user."""
+        """Obtener todos los mapas mentales de un usuario."""
         result = await db.execute(
             select(MindMap)
             .where(MindMap.user_id == user_id)

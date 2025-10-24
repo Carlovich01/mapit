@@ -4,27 +4,27 @@ from datetime import datetime
 
 
 class EdgeSubmission(BaseModel):
-    """Schema for submitted edge in game."""
+    """Esquema para el borde presentado en el juego."""
 
     source: str
     target: str
 
 
 class GameSessionCreate(BaseModel):
-    """Schema for creating a game session."""
+    """Esquema para crear una sesión de juego."""
 
     mind_map_id: UUID
 
 
 class GameSessionUpdate(BaseModel):
-    """Schema for updating/completing a game session."""
+    """Esquema para actualizar/completar una sesión de juego."""
 
     edges: list[EdgeSubmission] = Field(..., description="User's submitted edges")
     time_elapsed_seconds: int = Field(..., ge=0)
 
 
 class GameSessionResponse(BaseModel):
-    """Schema for game session response."""
+    """Esquema para la respuesta de una sesión de juego."""
 
     id: UUID
     mind_map_id: UUID

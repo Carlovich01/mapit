@@ -7,11 +7,11 @@ from app.utils.security import get_password_hash, verify_password
 
 
 class AuthService:
-    """Service for authentication operations."""
+    """Servicio para operaciones de autenticación."""
 
     @staticmethod
     async def create_user(db: AsyncSession, user_data: UserCreate) -> User:
-        """Create a new user."""
+        """Crear un nuevo usuario."""
         hashed_password = get_password_hash(user_data.password)
 
         user = User(
@@ -30,7 +30,7 @@ class AuthService:
     async def authenticate_user(
         db: AsyncSession, email: str, password: str
     ) -> User | None:
-        """Authenticate user with email and password."""
+        """Autenticar usuario con correo electrónico y contraseña."""
         result = await db.execute(select(User).where(User.email == email))
         user = result.scalar_one_or_none()
 
@@ -44,12 +44,12 @@ class AuthService:
 
     @staticmethod
     async def get_user_by_id(db: AsyncSession, user_id: UUID) -> User | None:
-        """Get user by ID."""
+        """Obtener usuario por ID."""
         result = await db.execute(select(User).where(User.id == user_id))
         return result.scalar_one_or_none()
 
     @staticmethod
     async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
-        """Get user by email."""
+        """Obtener usuario por correo electrónico."""
         result = await db.execute(select(User).where(User.email == email))
         return result.scalar_one_or_none()
