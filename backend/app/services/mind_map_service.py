@@ -35,13 +35,13 @@ class MindMapService:
         Returns:
             Crear un mapa mental con nodos y aristas
         """
-        # Extract text and calculate hash
+        # Extraer texto y calcular hash
         text, content_hash = await self.pdf_service.process_pdf(pdf_bytes)
 
-        # Generate mind map structure using AI
+        # Generar estructura de mapa mental usando IA
         structure = await self.ai_service.generate_mind_map_structure(text, title)
 
-        # Create mind map
+        # Crear mapa mental
         mind_map = MindMap(
             user_id=user_id,
             title=structure.get("title", title or filename),
@@ -50,9 +50,9 @@ class MindMapService:
         )
 
         db.add(mind_map)
-        await db.flush()  # Get mind_map.id
+        await db.flush()  # Obtener mind_map.id
 
-        # Create nodes
+        # Crear nodos
         for node_data in structure.get("nodes", []):
             position = node_data.get("position", {})
 
@@ -67,7 +67,7 @@ class MindMapService:
             )
             db.add(node)
 
-        # Create edges
+        # Crear edges
         for edge_data in structure.get("edges", []):
             edge = MindMapEdge(
                 mind_map_id=mind_map.id,
@@ -80,7 +80,7 @@ class MindMapService:
         await db.commit()
         await db.refresh(mind_map)
 
-        # Load relationships
+        # Cargar relaciones
         result = await db.execute(
             select(MindMap)
             .where(MindMap.id == mind_map.id)

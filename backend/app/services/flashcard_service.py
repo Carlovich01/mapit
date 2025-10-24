@@ -27,7 +27,7 @@ class FlashcardService:
 
         Si no se proporciona pdf_bytes, se utilizarán las flashcards existentes o fallará.
         """
-        # Check if flashcards already exist
+        # Comprueba si ya existen flashcards
         result = await db.execute(
             select(Flashcard).where(Flashcard.mind_map_id == mind_map_id)
         )
@@ -36,18 +36,18 @@ class FlashcardService:
         if existing_flashcards:
             return existing_flashcards
 
-        # Need PDF to generate flashcards
+        # ¿Necesitas un PDF para generar tarjetas didácticas?
         if not pdf_bytes:
             return []
 
-        # Extract text
+        # Extraer texto
         pdf_service = PDFService()
         text, _ = await pdf_service.process_pdf(pdf_bytes)
 
-        # Generate flashcards using AI
+        # Generar flashcards usando IA
         flashcard_data = await self.ai_service.generate_flashcards(text, num_cards)
 
-        # Create flashcards
+        # Crear flashcards
         flashcards = []
         for data in flashcard_data:
             flashcard = Flashcard(
@@ -88,7 +88,7 @@ class FlashcardService:
         progress = result.scalar_one_or_none()
 
         if not progress:
-            # Create initial progress
+            # Crear progreso inicial
             progress = FlashcardProgress(
                 user_id=user_id,
                 flashcard_id=flashcard_id,
@@ -101,7 +101,7 @@ class FlashcardService:
             await db.commit()
             await db.refresh(progress)
 
-            # Load flashcard
+            # Cargar flashcard
             result = await db.execute(
                 select(FlashcardProgress)
                 .where(FlashcardProgress.id == progress.id)
