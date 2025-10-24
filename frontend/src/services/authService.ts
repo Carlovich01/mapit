@@ -2,7 +2,6 @@ import api from "./api";
 import type {
   User,
   AuthToken,
-  LoginRequest,
   RegisterRequest,
 } from "../types/auth";
 

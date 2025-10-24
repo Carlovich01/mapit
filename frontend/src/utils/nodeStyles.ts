@@ -4,14 +4,14 @@
 
 // Paleta de colores para diferentes niveles
 const levelColors = [
-  { bg: "#8B5CF6", border: "#7C3AED", text: "#FFFFFF" }, // Nivel 0 - Púrpura (raíz)
-  { bg: "#3B82F6", border: "#2563EB", text: "#FFFFFF" }, // Nivel 1 - Azul
-  { bg: "#10B981", border: "#059669", text: "#FFFFFF" }, // Nivel 2 - Verde
-  { bg: "#F59E0B", border: "#D97706", text: "#FFFFFF" }, // Nivel 3 - Ámbar
-  { bg: "#EF4444", border: "#DC2626", text: "#FFFFFF" }, // Nivel 4 - Rojo
-  { bg: "#EC4899", border: "#DB2777", text: "#FFFFFF" }, // Nivel 5 - Rosa
-  { bg: "#14B8A6", border: "#0D9488", text: "#FFFFFF" }, // Nivel 6 - Verde azulado
-  { bg: "#F97316", border: "#EA580C", text: "#FFFFFF" }, // Nivel 7 - Naranja
+  { bg: "#7138F5", border: "#520DF2", text: "#FFFFFF" }, // Nivel 0 - Púrpura (raíz)
+  { bg: "#0B64F4", border: "#0952C8", text: "#FFFFFF" }, // Nivel 1 - Azul
+  { bg: "#0D9668", border: "#096C4B", text: "#FFFFFF" }, // Nivel 2 - Verde oscuro
+  { bg: "#EB1414", border: "#C01111", text: "#FFFFFF" }, // Nivel 3 - Rojo
+  { bg: "#C98208", border: "#9D6607", text: "#FFFFFF" }, // Nivel 4 - Marrón
+  { bg: "#75A300", border: "#547500", text: "#FFFFFF" }, // Nivel 5 - Verde lima
+  { bg: "#E7187F", border: "#BD1469", text: "#FFFFFF" }, // Nivel 6 - Rosa
+  { bg: "#525252", border: "#424242", text: "#FFFFFF" }, // Nivel 7 - Gris
 ];
 
 /**
@@ -35,7 +35,7 @@ export function getNodeStyleForLevel(level: number) {
     border: `2px solid ${colors.border}`,
     borderRadius: "8px",
     padding: "12px 20px",
-    fontSize: level === 0 ? "16px" : "14px",
+    fontSize: level === 0 ? "16px" : "15px",
     fontWeight: level === 0 ? "700" : "600",
     boxShadow:
       "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
