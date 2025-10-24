@@ -5,31 +5,29 @@
 ## Características
 
 ### 1. 📊 Mapas Mentales IA
+
 - Sube un PDF y obtén automáticamente un mapa mental interactivo
 - Visualización dinámica con React Flow y d3-force
 - Nodos y conexiones organizados jerárquicamente
 
 ### 2. 🎴 Flashcards con Repetición Espaciada
+
 - Generación automática de flashcards desde el PDF
 - Implementación del algoritmo SM-2 para optimizar el aprendizaje
 - Sistema de revisión inteligente
+- Evaluacion de respuestas con IA
 
-### 3. 🎮 Juego de Reordenamiento
+### 3. 🎮 Juego de Conexión de Conceptos
+
 - Modo de juego interactivo
-- Reorganiza y conecta nodos del mapa mental
+- Conecta nodos dispersos recreando el mapa mental desde cero
 - Sistema de puntuación basado en precisión
-
-### 4. 🎨 Sistema de Logging con Colores
-- Logs coloridos en consola para backend (terminal) y frontend (navegador)
-- 🟢 Verde para peticiones exitosas (200-299)
-- 🔴 Rojo para errores (400+)
-- Tracking automático de todas las peticiones HTTP con duración
-- ✅ Funciona en desarrollo local y Docker Compose
-- Ver [LOGGING.md](LOGGING.md) o [DOCKER_INSTRUCCIONES.md](DOCKER_INSTRUCCIONES.md) para más detalles
+- Rastrea tu mejor puntuación y tiempo
 
 ## Stack Tecnológico
 
 ### Backend
+
 - **Framework:** FastAPI 0.115+ (Python 3.12+)
 - **Base de Datos:** PostgreSQL 16+ con SQLAlchemy 2.0 (asyncio)
 - **IA:** Google Gemini 2.5 Flash
@@ -37,63 +35,33 @@
 - **Autenticación:** JWT (python-jose)
 
 ### Frontend
+
 - **Framework:** React 19.1.1 + TypeScript
 - **Build Tool:** Vite 7
 - **Compilador:** SWC
-- **UI:** shadcn/ui + Tailwind CSS
+- **UI:** shadcn/ui + Tailwind CSS + Lucide Icons
 - **Routing:** React Router DOM 7
 - **State:** Zustand
 - **HTTP:** Axios
-- **Visualización:** React Flow + d3-hierarchy
+- **Visualización:** React Flow (@xyflow/react) + d3-hierarchy
 
 ### DevOps
+
 - **Contenedores:** Docker + Docker Compose
-- **Despliegue:** Render (configurado)
-
-## Estructura del Proyecto
-
-```
-mapit/
-├── backend/
-│   ├── app/
-│   │   ├── api/          # Endpoints (auth, mind_maps, flashcards, game)
-│   │   ├── models/       # Modelos SQLAlchemy
-│   │   ├── schemas/      # Esquemas Pydantic
-│   │   ├── services/     # Lógica de negocio
-│   │   ├── utils/        # Utilidades (JWT, validación)
-│   │   ├── config.py     # Configuración
-│   │   ├── database.py   # Configuración DB
-│   │   └── main.py       # Aplicación FastAPI
-│   ├── alembic/          # Migraciones
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/   # Componentes React
-│   │   ├── pages/        # Páginas de la aplicación
-│   │   ├── services/     # Servicios API
-│   │   ├── hooks/        # Hooks personalizados
-│   │   ├── types/        # Tipos TypeScript
-│   │   ├── utils/        # Utilidades
-│   │   ├── lib/          # shadcn utils
-│   │   └── App.tsx       # Router principal
-│   ├── package.json
-│   └── Dockerfile
-│
-└── docker-compose.yml
-```
+- **Servidor Web (Producción):** Nginx
+- **Migraciones DB:** Alembic
 
 ## Inicio Rápido
 
 ### Prerequisitos
 
-- Docker y Docker Compose
-- API Key de Google Gemini
+- Docker y Docker Compose instalados
+- API Key de Google Gemini ([obtener aquí](https://aistudio.google.com/app/apikey))
 
 ### Configuración
 
 1. **Clonar el repositorio**
+
    ```bash
    git clone <repository-url>
    cd mapit
@@ -115,11 +83,13 @@ docker-compose -f docker-compose.dev.yml up --build
 ```
 
 **Características:**
+
 - ⚡ Hot-reload en backend y frontend
 - 🔄 Cambios de código se reflejan automáticamente
 - 📝 Volúmenes montados para edición en tiempo real
 
 **URLs:**
+
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000
 - Adminer (DB): http://localhost:8080
@@ -133,6 +103,7 @@ docker-compose -f docker-compose.prod.yml up --build
 ```
 
 **Características:**
+
 - ✅ Frontend compilado con `npm run build`
 - ✅ Archivos estáticos servidos por Nginx
 - ✅ Backend con `fastapi run` (sin reload)
@@ -140,6 +111,7 @@ docker-compose -f docker-compose.prod.yml up --build
 - ✅ Mejor rendimiento y menor uso de recursos
 
 **URLs:**
+
 - Aplicación completa: http://localhost:8080
 - Backend API: http://localhost:8000
 
@@ -162,22 +134,14 @@ docker-compose -f docker-compose.prod.yml up --build frontend
 docker-compose -f docker-compose.dev.yml down -v
 ```
 
-2. **Configurar variables de entorno**
-   
-   Crear archivo `.env` en la raíz:
-   ```env
-   GEMINI_API_KEY=tu-api-key-de-gemini
-   ```
+## Documentación Adicional
 
-3. **Iniciar con Docker Compose**
-   ```bash
-   docker-compose up --build
-   ```
+Para una explicación detallada de la arquitectura del proyecto, consulta [Arquitectura.md](./Arquitectura.md), donde encontrarás:
 
-4. **Acceder a la aplicación**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:8000
-   - API Docs: http://localhost:8000/docs
+- Descripción de todas las tecnologías utilizadas
+- Flujos de datos completos de la aplicación
+- Explicación de la estructura de la base de datos
+- Guía de seguridad y mejores prácticas
 
 ### Desarrollo Local (sin Docker)
 
@@ -247,25 +211,35 @@ alembic downgrade -1
 
 ## API Endpoints
 
+La API completa está documentada en **Swagger UI**: http://localhost:8000/docs (modo desarrollo)
+
 ### Autenticación
-- `POST /api/auth/register` - Registro de usuario
-- `POST /api/auth/login` - Inicio de sesión (OAuth2)
-- `GET /api/auth/me` - Obtener usuario actual
+
+- `POST /api/register` - Registro de usuario
+- `POST /api/login` - Inicio de sesión (OAuth2)
+- `GET /api/users/me` - Obtener usuario actual
 
 ### Mapas Mentales
-- `POST /api/mind-maps` - Subir PDF y crear mapa
+
+- `POST /api/mind-maps` - Subir PDF y crear mapa mental
 - `GET /api/mind-maps` - Listar mapas del usuario
-- `GET /api/mind-maps/{id}` - Obtener mapa específico
+- `GET /api/mind-maps/{id}` - Obtener mapa específico con nodos y conexiones
 
 ### Flashcards
-- `GET /api/flashcards/mind-maps/{id}/flashcards` - Obtener flashcards
-- `POST /api/flashcards/{id}/review` - Revisar flashcard
-- `GET /api/flashcards/due` - Flashcards pendientes
+
+- `POST /api/flashcards/generate` - Generar flashcards desde PDF
+- `GET /api/flashcards/mind-map/{id}` - Obtener flashcards de un mapa
+- `GET /api/flashcards/{id}` - Obtener flashcard específica
+- `GET /api/flashcards/{id}/due` - Flashcards pendientes de revisión
+- `POST /api/flashcards/{id}/review` - Registrar revisión (SM-2)
+- `POST /api/flashcards/evaluate` - Evaluar respuesta con IA
 
 ### Juego
-- `POST /api/game/sessions` - Crear sesión de juego
-- `PUT /api/game/sessions/{id}` - Completar sesión
-- `GET /api/game/sessions` - Listar sesiones
+
+- `POST /api/game/sessions` - Crear nueva sesión de juego
+- `PUT /api/game/sessions/{id}` - Completar sesión y enviar solución
+- `GET /api/game/sessions/{id}` - Obtener detalles de sesión
+- `GET /api/game/sessions` - Listar sesiones del usuario
 
 ## Despliegue en Render
 
@@ -310,10 +284,45 @@ El sistema implementa el algoritmo SuperMemo 2 para optimizar la revisión de fl
 
 ### Validación de Grafo
 
-Para el juego de reordenamiento:
-- Comparación de estructura de aristas
-- Normalización para grafo no dirigido
-- Puntuación basada en precisión (0-100%)
+Para el juego de conexión de conceptos:
+
+- El usuario recrea las conexiones desde cero (sin conexiones preexistentes)
+- Los nodos se distribuyen aleatoriamente usando posicionamiento circular
+- Comparación exacta de conexiones con el mapa original
+- Puntuación basada en porcentaje de conexiones correctas (0-100%)
+- Sistema de récords personales por mapa mental
+
+## Características Técnicas Destacadas
+
+### Inteligencia Artificial
+
+- **Google Gemini 2.5 Flash** para análisis semántico de PDFs
+- Generación automática de estructura de mapas mentales jerárquicos
+- Creación inteligente de preguntas y respuestas para flashcards
+- Evaluación semántica de respuestas del usuario (acepta sinónimos y paráfrasis)
+
+### Aprendizaje Optimizado
+
+- **Algoritmo SM-2** para repetición espaciada científicamente probada
+- Cálculo dinámico de intervalos de revisión basado en desempeño
+- Factor de facilidad adaptativo por tarjeta
+- Sistema de próxima revisión automático
+
+### Seguridad
+
+- Contraseñas cifradas con **Bcrypt**
+- Autenticación con **JWT** (JSON Web Tokens)
+- Validación de permisos por usuario
+- Protección CORS configurada
+- Hashing de contenido PDF para evitar duplicados
+
+### Rendimiento
+
+- Procesamiento de PDF en memoria (sin archivos temporales)
+- Async/Await en todo el backend para operaciones no bloqueantes
+- SQLAlchemy async con PostgreSQL para consultas eficientes
+- Frontend compilado y optimizado con Vite + SWC
+- Compresión gzip y cache de assets en producción
 
 ## Contribución
 
