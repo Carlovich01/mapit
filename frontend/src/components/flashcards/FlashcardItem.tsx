@@ -1,7 +1,9 @@
 import { useState } from "react";
-import type { Flashcard } from "../../types/flashcard";
+import type { Flashcard, AIEvaluationResponse } from "../../types/flashcard";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Textarea } from "../ui/textarea";
+import { flashcardService } from "../../services/flashcardService";
 
 interface FlashcardItemProps {
   flashcard: Flashcard;
@@ -19,6 +21,10 @@ export function FlashcardItem({
   totalCards,
 }: FlashcardItemProps) {
   const [showAnswer, setShowAnswer] = useState(false);
+  const [mode, setMode] = useState<"manual" | "written">("manual");
+  const [userAnswer, setUserAnswer] = useState("");
+  const [aiEvaluation, setAiEvaluation] = useState<AIEvaluationResponse | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
 
   const qualityOptions = [
     { value: 5, label: "Perfecto", color: "bg-green-500" },
@@ -31,6 +37,40 @@ export function FlashcardItem({
 
   const handleReview = async (quality: number) => {
     await onReview(quality);
+    resetCard();
+  };
+
+  const handleSubmitAnswer = async () => {
+    if (!userAnswer.trim()) return;
+
+    setIsEvaluating(true);
+    try {
+      const evaluation = await flashcardService.evaluateAnswer(
+        flashcard.id,
+        userAnswer
+      );
+      setAiEvaluation(evaluation);
+      setShowAnswer(true);
+    } catch (error) {
+      console.error("Error al evaluar la respuesta:", error);
+      alert("Error al evaluar la respuesta. Por favor intenta de nuevo.");
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  const handleAIReview = async () => {
+    if (aiEvaluation) {
+      await onReview(aiEvaluation.quality);
+      resetCard();
+    }
+  };
+
+  const resetCard = () => {
+    setShowAnswer(false);
+    setMode("manual");
+    setUserAnswer("");
+    setAiEvaluation(null);
   };
 
   return (
@@ -69,13 +109,67 @@ export function FlashcardItem({
         </div>
 
         {!showAnswer ? (
-          <Button
-            onClick={() => setShowAnswer(true)}
-            className="w-full"
-            disabled={disabled}
-          >
-            Mostrar Respuesta
-          </Button>
+          <div className="space-y-4">
+            {/* Selector de modo */}
+            <div className="flex gap-2 justify-center">
+              <Button
+                onClick={() => setMode("manual")}
+                variant={mode === "manual" ? "default" : "outline"}
+                className="flex-1"
+                disabled={disabled}
+              >
+                Evaluación Manual
+              </Button>
+              <Button
+                onClick={() => setMode("written")}
+                variant={mode === "written" ? "default" : "outline"}
+                className="flex-1"
+                disabled={disabled}
+              >
+                Escribir Respuesta
+              </Button>
+            </div>
+
+            {/* Modo manual */}
+            {mode === "manual" && (
+              <Button
+                onClick={() => setShowAnswer(true)}
+                className="w-full"
+                disabled={disabled}
+              >
+                Mostrar Respuesta
+              </Button>
+            )}
+
+            {/* Modo escrito */}
+            {mode === "written" && (
+              <div className="space-y-2">
+                <label className="text-sm font-semibold">
+                  Escribe tu respuesta:
+                </label>
+                <Textarea
+                  value={userAnswer}
+                  onChange={(e) => setUserAnswer(e.target.value)}
+                  placeholder="Escribe aquí tu respuesta..."
+                  disabled={disabled || isEvaluating}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.ctrlKey) {
+                      e.preventDefault();
+                      handleSubmitAnswer();
+                    }
+                  }}
+                  className="min-h-[80px]"
+                />
+                <Button
+                  onClick={handleSubmitAnswer}
+                  className="w-full"
+                  disabled={disabled || isEvaluating || !userAnswer.trim()}
+                >
+                  {isEvaluating ? "Evaluando..." : "Evaluar Respuesta"}
+                </Button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
             <div className="p-4 bg-brand-light dark:bg-brand-blue-darkest rounded-lg border-2 border-primary">
@@ -85,26 +179,73 @@ export function FlashcardItem({
               <p className="text-base">{flashcard.answer}</p>
             </div>
 
-            <div>
-              <p className="text-sm font-semibold mb-2">
-                ¿Qué tan bien recordaste?
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {qualityOptions.map((option) => (
-                  <Button
-                    key={option.value}
-                    onClick={() => handleReview(option.value)}
-                    variant="outline"
-                    className="h-auto py-3"
-                    disabled={disabled}
-                  >
-                    <div className="flex flex-col items-center gap-1">
-                      <div className={`w-3 h-3 rounded-full ${option.color}`} />
-                      <span className="text-xs">{option.label}</span>
-                    </div>
-                  </Button>
-                ))}
+            {/* Mostrar evaluación de IA si existe */}
+            {aiEvaluation && (
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-500">
+                <div className="flex items-center gap-2 mb-2">
+                  <div
+                    className={`w-4 h-4 rounded-full ${
+                      qualityOptions.find((q) => q.value === aiEvaluation.quality)
+                        ?.color || "bg-gray-500"
+                    }`}
+                  />
+                  <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                    Evaluación IA: {aiEvaluation.quality_label}
+                  </p>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {aiEvaluation.feedback}
+                </p>
               </div>
+            )}
+
+            <div>
+              {aiEvaluation ? (
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold">
+                    ¿Aceptar evaluación de IA o calificar manualmente?
+                  </p>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleAIReview}
+                      className="flex-1"
+                      disabled={disabled}
+                    >
+                      Aceptar ({aiEvaluation.quality_label})
+                    </Button>
+                    <Button
+                      onClick={() => setAiEvaluation(null)}
+                      variant="outline"
+                      className="flex-1"
+                      disabled={disabled}
+                    >
+                      Calificar Manualmente
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm font-semibold mb-2">
+                    ¿Qué tan bien recordaste?
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {qualityOptions.map((option) => (
+                      <Button
+                        key={option.value}
+                        onClick={() => handleReview(option.value)}
+                        variant="outline"
+                        className="h-auto py-3"
+                        disabled={disabled}
+                      >
+                        <div className="flex flex-col items-center gap-1">
+                          <div className={`w-3 h-3 rounded-full ${option.color}`} />
+                          <span className="text-xs">{option.label}</span>
+                        </div>
+                      </Button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </>
         )}

@@ -15,7 +15,6 @@ export function FlashcardsPage() {
   const handleReview = async (flashcardId: string, quality: number) => {
     const { flashcardService } = await import("../services/flashcardService");
     await flashcardService.reviewFlashcard(flashcardId, quality);
-    // NO recargar aquí - dejar que FlashcardDeck maneje la navegación
   };
 
   if (mindMapLoading || loading) {

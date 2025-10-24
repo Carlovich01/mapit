@@ -195,3 +195,111 @@ Responde SOLO con el array JSON:"""
                     "answer": text,
                 }
             ]
+
+    async def evaluate_flashcard_answer(
+        self, question: str, correct_answer: str, user_answer: str
+    ) -> dict:
+        """
+        Evalúa la respuesta del usuario a una flashcard usando IA.
+
+        Args:
+            question: La pregunta de la flashcard
+            correct_answer: La respuesta correcta
+            user_answer: La respuesta proporcionada por el usuario
+
+        Returns:
+            Dict con: {
+                "quality": int (0-5),
+                "feedback": str,
+                "quality_label": str
+            }
+        """
+        prompt = f"""Eres un tutor educativo. Evalúa la respuesta del estudiante a una pregunta de flashcard.
+
+PREGUNTA: {question}
+
+RESPUESTA CORRECTA: {correct_answer}
+
+RESPUESTA DEL ESTUDIANTE: {user_answer}
+
+Evalúa la respuesta del estudiante y proporciona:
+1. Una calificación de calidad (0-5) según estos criterios:
+   - 5 (Perfecto): Respuesta completamente correcta y precisa
+   - 4 (Bien): Respuesta correcta con detalles adecuados
+   - 3 (Correcto): Respuesta correcta pero incompleta o con algunos errores menores
+   - 2 (Difícil): Respuesta parcialmente correcta, falta información importante
+   - 1 (Mal): Respuesta incorrecta o con errores significativos
+   - 0 (No recuerdo): Respuesta completamente incorrecta o sin sentido
+
+2. Retroalimentación constructiva y específica (máximo 200 caracteres)
+
+IMPORTANTE: Responde ÚNICAMENTE con el objeto JSON, sin texto adicional.
+
+Formato requerido:
+{{
+  "quality": 0-5,
+  "feedback": "Retroalimentación constructiva aquí",
+  "quality_label": "Perfecto/Bien/Correcto/Difícil/Mal/No recuerdo"
+}}
+
+Responde SOLO con el JSON:"""
+
+        try:
+            response = await self.client.aio.models.generate_content(
+                model=self.model,
+                contents=prompt,
+                config=GenerateContentConfig(
+                    response_modalities=["TEXT"]
+                ),
+            )
+
+            response_text = response.text.strip()
+
+            # Eliminar bloques de código markdown
+            if response_text.startswith("```"):
+                lines = response_text.split("\n")
+                response_text = (
+                    "\n".join(lines[1:-1]) if len(lines) > 2 else response_text
+                )
+                response_text = (
+                    response_text.replace("```json", "").replace("```", "").strip()
+                )
+
+            evaluation = json.loads(response_text)
+
+            # Validar que tenga los campos requeridos
+            if (
+                "quality" not in evaluation
+                or "feedback" not in evaluation
+                or "quality_label" not in evaluation
+            ):
+                raise ValueError("Evaluación incompleta de la IA")
+
+            # Asegurar que quality esté en el rango correcto
+            evaluation["quality"] = max(0, min(5, int(evaluation["quality"])))
+
+            return evaluation
+
+        except Exception as e:
+            # Respaldo: evaluación básica por coincidencia de texto
+            user_lower = user_answer.lower().strip()
+            correct_lower = correct_answer.lower().strip()
+
+            if user_lower == correct_lower:
+                return {
+                    "quality": 5,
+                    "feedback": "Respuesta exactamente correcta",
+                    "quality_label": "Perfecto",
+                }
+            elif correct_lower in user_lower or user_lower in correct_lower:
+                return {
+                    "quality": 3,
+                    "feedback": "Respuesta parcialmente correcta. Revisa los detalles.",
+                    "quality_label": "Correcto",
+                }
+            else:
+                return {
+                    "quality": 1,
+                    "feedback": "Respuesta incorrecta. Repasa el concepto.",
+                    "quality_label": "Mal",
+                }

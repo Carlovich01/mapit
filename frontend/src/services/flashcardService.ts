@@ -3,6 +3,8 @@ import type {
   Flashcard,
   FlashcardProgress,
   FlashcardReview,
+  FlashcardAnswerSubmission,
+  AIEvaluationResponse,
 } from "../types/flashcard";
 
 export const flashcardService = {
@@ -35,6 +37,18 @@ export const flashcardService = {
   async getFlashcardProgress(flashcardId: string): Promise<FlashcardProgress> {
     const response = await api.get<FlashcardProgress>(
       `/flashcards/${flashcardId}/progress`
+    );
+    return response.data;
+  },
+
+  async evaluateAnswer(
+    flashcardId: string,
+    userAnswer: string
+  ): Promise<AIEvaluationResponse> {
+    const submission: FlashcardAnswerSubmission = { user_answer: userAnswer };
+    const response = await api.post<AIEvaluationResponse>(
+      `/flashcards/${flashcardId}/evaluate`,
+      submission
     );
     return response.data;
   },

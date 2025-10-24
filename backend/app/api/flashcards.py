@@ -8,8 +8,11 @@ from app.schemas.flashcard import (
     FlashcardResponse,
     FlashcardReview,
     FlashcardProgressResponse,
+    FlashcardAnswerSubmission,
+    AIEvaluationResponse,
 )
 from app.services.flashcard_service import FlashcardService
+from app.services.ai_service import AIService
 
 
 router = APIRouter(prefix="/flashcards", tags=["Flashcards"])
@@ -84,3 +87,44 @@ async def get_flashcard_progress(
     )
 
     return progress
+
+
+@router.post("/{flashcard_id}/evaluate", response_model=AIEvaluationResponse)
+async def evaluate_flashcard_answer(
+    flashcard_id: UUID,
+    submission: FlashcardAnswerSubmission,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Evaluar la respuesta escrita del usuario usando IA y proporcionar retroalimentación."""
+    flashcard_service = FlashcardService()
+    ai_service = AIService()
+
+    try:
+        # Obtener la flashcard
+        flashcard = await flashcard_service.get_flashcard_by_id(
+            db=db, flashcard_id=flashcard_id
+        )
+
+        if not flashcard:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Flashcard no encontrada",
+            )
+
+        # Evaluar la respuesta con IA
+        evaluation = await ai_service.evaluate_flashcard_answer(
+            question=flashcard.question,
+            correct_answer=flashcard.answer,
+            user_answer=submission.user_answer,
+        )
+
+        return AIEvaluationResponse(**evaluation)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al evaluar la respuesta: {str(e)}",
+        )

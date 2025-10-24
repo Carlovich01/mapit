@@ -73,6 +73,15 @@ class FlashcardService:
         )
         return list(result.scalars().all())
 
+    async def get_flashcard_by_id(
+        self, db: AsyncSession, flashcard_id: UUID
+    ) -> Flashcard | None:
+        """Obtener una flashcard por su ID."""
+        result = await db.execute(
+            select(Flashcard).where(Flashcard.id == flashcard_id)
+        )
+        return result.scalar_one_or_none()
+
     async def get_flashcard_progress(
         self, db: AsyncSession, user_id: UUID, flashcard_id: UUID
     ) -> FlashcardProgress:

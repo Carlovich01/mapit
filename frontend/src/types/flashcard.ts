@@ -19,3 +19,13 @@ export interface FlashcardProgress {
 export interface FlashcardReview {
   quality: number; // 0-5
 }
+
+export interface FlashcardAnswerSubmission {
+  user_answer: string;
+}
+
+export interface AIEvaluationResponse {
+  quality: number; // 0-5
+  feedback: string;
+  quality_label: string;
+}
