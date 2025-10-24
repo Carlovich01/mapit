@@ -164,14 +164,14 @@ function MindMapReadViewerInner({
       >
         <Background/>
         <Controls showInteractive={false} />
-        <MiniMap 
+        {/* <MiniMap 
           nodeStrokeWidth={3}
           zoomable
           pannable
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.7)',
           }}
-        />
+        /> */}
       </ReactFlow>
     </div>
   );
