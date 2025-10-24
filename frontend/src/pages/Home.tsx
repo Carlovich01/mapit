@@ -49,9 +49,9 @@ export function Home() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Quests Personalizados</CardTitle>
+            <CardTitle>Quests Personalizados IA</CardTitle>
             <CardDescription>
-              Implementados a traves de flashcards y repetición espaciada para optimizar tu aprendizaje
+              Uso de flashcards, repetición espaciada y evaluación de respuestas con IA.
             </CardDescription>
           </CardHeader>
           <CardContent>
