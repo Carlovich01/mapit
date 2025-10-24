@@ -5,7 +5,7 @@ from app.config import settings
 
 # Create async engine
 engine = create_async_engine(
-    settings.DATABASE_URL, echo=True, future=True  # Set to False in production
+    settings.DATABASE_URL, echo=False, future=True  # Set to False in production
 )
 
 # Create async session factory
