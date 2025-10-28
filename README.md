@@ -133,16 +133,6 @@ docker-compose -f docker-compose.prod.yml up --build frontend
 # Eliminar volúmenes (resetear base de datos)
 docker-compose -f docker-compose.dev.yml down -v
 ```
-
-## Documentación Adicional
-
-Para una explicación detallada de la arquitectura del proyecto, consulta [Arquitectura.md](./Arquitectura.md), donde encontrarás:
-
-- Descripción de todas las tecnologías utilizadas
-- Flujos de datos completos de la aplicación
-- Explicación de la estructura de la base de datos
-- Guía de seguridad y mejores prácticas
-
 ### Desarrollo Local (sin Docker)
 
 #### Backend
@@ -240,57 +230,6 @@ La API completa está documentada en **Swagger UI**: http://localhost:8000/docs 
 - `PUT /api/game/sessions/{id}` - Completar sesión y enviar solución
 - `GET /api/game/sessions/{id}` - Obtener detalles de sesión
 - `GET /api/game/sessions` - Listar sesiones del usuario
-
-## Despliegue en Render
-
-### Backend
-
-1. Crear nuevo Web Service
-2. Conectar repositorio
-3. Configurar:
-   - Build Command: `pip install -r requirements.txt && alembic upgrade head`
-   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Variables de entorno:
-   - `DATABASE_URL`
-   - `SECRET_KEY`
-   - `GEMINI_API_KEY`
-   - `FRONTEND_URL`
-
-### Frontend
-
-1. Crear nuevo Static Site
-2. Configurar:
-   - Build Command: `npm install && npm run build`
-   - Publish Directory: `dist`
-3. Variable de entorno:
-   - `VITE_API_URL`: URL del backend
-
-### Base de Datos
-
-1. Crear PostgreSQL Database en Render
-2. Copiar la URL de conexión interna
-3. Agregar a variables de entorno del backend
-
-## Algoritmos
-
-### SM-2 (Repetición Espaciada)
-
-El sistema implementa el algoritmo SuperMemo 2 para optimizar la revisión de flashcards:
-
-- **Calidad (0-5):** Nivel de recordación
-- **Factor de Facilidad (EF):** Dificultad de la tarjeta
-- **Intervalo:** Días hasta próxima revisión
-- **Repeticiones:** Veces revisada correctamente
-
-### Validación de Grafo
-
-Para el juego de conexión de conceptos:
-
-- El usuario recrea las conexiones desde cero (sin conexiones preexistentes)
-- Los nodos se distribuyen aleatoriamente usando posicionamiento circular
-- Comparación exacta de conexiones con el mapa original
-- Puntuación basada en porcentaje de conexiones correctas (0-100%)
-- Sistema de récords personales por mapa mental
 
 ## Características Técnicas Destacadas
 
