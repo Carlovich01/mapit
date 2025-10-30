@@ -82,6 +82,12 @@ Para desarrollo activo con recarga automática:
 docker-compose -f docker-compose.dev.yml up --build
 ```
 
+**⚠️ Importante:** En el primer inicio, mientras los servicios están corriendo, ejecuta las migraciones de base de datos en otra terminal:
+
+```bash
+docker-compose -f docker-compose.dev.yml exec backend alembic upgrade head
+```
+
 **Características:**
 
 - ⚡ Hot-reload en backend y frontend
@@ -100,6 +106,12 @@ Para pruebas en un entorno similar a producción:
 
 ```bash
 docker-compose -f docker-compose.prod.yml up --build
+```
+
+**⚠️ Importante:** En el primer inicio, mientras los servicios están corriendo, ejecuta las migraciones de base de datos en otra terminal:
+
+```bash
+docker-compose -f docker-compose.prod.yml exec backend alembic upgrade head
 ```
 
 **Características:**
@@ -133,6 +145,7 @@ docker-compose -f docker-compose.prod.yml up --build frontend
 # Eliminar volúmenes (resetear base de datos)
 docker-compose -f docker-compose.dev.yml down -v
 ```
+
 ### Desarrollo Local (sin Docker)
 
 #### Backend
